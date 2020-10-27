@@ -15,9 +15,10 @@ jobs:
       - name: Install dependencies
         run: |
           ./setup.sh
-      - name: Analyzing the code with pylint
+          pip install black
+      - name: Check formatting
         run: |
-          pylint note_14
+          black note_14
       - name: Run application
         run: |
           ./run.sh
