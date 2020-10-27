@@ -15,10 +15,13 @@ jobs:
       - name: Install dependencies
         run: |
           ./setup.sh
+          source .venv/bin/activate
           pip install -r requirements.dev.txt
       - name: Check formatting
         run: |
+          source .venv/bin/activate
           black note_14
       - name: Run tests
         run: |
+          source .venv/bin/activate
           pytest tests
