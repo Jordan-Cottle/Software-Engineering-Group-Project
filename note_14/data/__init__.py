@@ -1,3 +1,5 @@
+""" Package for providing data to the application. """
+
 import os
 import json
 
