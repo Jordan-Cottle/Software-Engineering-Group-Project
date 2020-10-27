@@ -9,5 +9,5 @@ else  # Not windows
     source .venv/bin/activate
 fi
 
-pip install --updrade pip
+pip install --upgrade pip
 pip install -r requirements.txt
