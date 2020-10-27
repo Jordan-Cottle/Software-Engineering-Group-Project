@@ -1,11 +1,14 @@
 """ Package for providing data to the application. """
 
-import os
-import json
-
-from server import app
-
-NOTES_PATH = os.path.join(app.root_path, "data", "notes")
-
-with open(NOTES_PATH, "r") as note_file:
-    NOTES = json.load(note_file)
+NOTES = [
+    {
+        "id": "0",
+        "title": "Test note 1",
+        "text": "This is a json file"
+    },
+    {
+        "id": "1",
+        "title": "Test note 2",
+        "text": "These notes are in an array"
+    }
+]
