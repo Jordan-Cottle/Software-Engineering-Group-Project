@@ -1,0 +1,10 @@
+{% extends "core.html" %}
+{% block body %}
+
+<h1>List of available notes</h1>
+<ul>
+    {% for note in notes %}
+    <li><a href="/notes/{{ note.id }}" }>{{ note.title }}</a></li>
+    {% endfor %}
+</ul>
+{% endblock body %}
