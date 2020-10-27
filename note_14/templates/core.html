@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="UNCC Notes App">
+    <title>UNCC Notes App</title>
+    <!-- styles -->
+    <link rel="stylesheet" href="{{ url_for('static', filename='main.css') }}">
+</head>
+
+<body>
+    <h1>Navigation</h1>
+    <ul>
+        {% block navigation %}
+        <li><a href="/">Home</a></li>
+        <li><a href="/notes">Course notes</a></li>
+        {% endblock navigation %}
+    </ul>
+
+    {% block body %}
+    {% endblock %}
+</body>
+
+</html>
