@@ -7,4 +7,6 @@ else  # Not windows
     source .venv/bin/activate
 fi
 
-python note_14/app.py
+pushd note_14
+python app.py
+popd
