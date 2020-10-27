@@ -19,6 +19,6 @@ jobs:
       - name: Check formatting
         run: |
           black note_14
-      - name: Run application
+      - name: Run tests
         run: |
-          ./run.sh
+          pytest tests
