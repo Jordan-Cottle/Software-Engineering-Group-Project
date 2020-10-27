@@ -15,7 +15,7 @@ jobs:
       - name: Install dependencies
         run: |
           ./setup.sh
-          pip install black
+          pip install -r requirements.dev.txt
       - name: Check formatting
         run: |
           black note_14
