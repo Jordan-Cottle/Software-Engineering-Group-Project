@@ -2,18 +2,12 @@
 
 ## Goals
 
-* From
-* Last
-* Week
+* 
 
 ## This Week's Progress
 
-* Update
-* On 
-* Items
+* 
 
 ## Next Week's Goals
 
-* For
-* Next
-* Week
+* 
