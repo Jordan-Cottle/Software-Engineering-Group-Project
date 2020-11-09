@@ -11,7 +11,6 @@ from data import NOTES
 
 
 @app.route("/")
-@app.route("/index")
 def main_page():
     """ Render the main landing page. """
     return render_template("index.html")
