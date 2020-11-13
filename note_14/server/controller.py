@@ -5,9 +5,9 @@ Flask routes should be defined here.
 
 from server import app
 
-from flask import render_template
+from flask import render_template, g
 
-from data import get_note, get_notes
+from database import get_note, get_notes
 
 
 @app.route("/")
@@ -19,10 +19,10 @@ def main_page():
 @app.route("/notes")
 def list_notes():
     """ Render the notes list page. """
-    return render_template("notes.html", notes=get_notes())
+    return render_template("notes.html", notes=get_notes(g.session))
 
 
 @app.route("/notes/<note_id>")
 def view_note(note_id):
     """ Render individual note page. """
-    return render_template("note.html", note=get_note(int(note_id)))
+    return render_template("note.html", note=get_note(g.session, int(note_id)))
