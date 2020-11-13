@@ -1,0 +1,1 @@
+pytest --cov=note_14 tests
