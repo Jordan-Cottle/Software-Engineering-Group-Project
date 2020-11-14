@@ -29,9 +29,10 @@ def database_session(database):
     Session = sessionmaker(bind=database)
     session = Session()
 
-    with patch("server.controller.g") as g_mock:
-        g_mock.session = Session()
-        yield session
+    with app.app_context():
+        with patch("server.controller.g") as g_mock:
+            g_mock.session = Session()
+            yield session
 
     session.close()
 
