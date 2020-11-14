@@ -1,6 +1,7 @@
 python3 -m venv .venv
 
 if [[ $? -ne 0 ]]; then
+    echo "Installing on windows"
     python -m venv .venv
 fi
 
@@ -12,7 +13,6 @@ else
 fi
 
 home_dir=$(pwd)
-note_14="$(pwd)/note_14"
 
 if [[ $windows == "true" ]]
 then
@@ -25,6 +25,8 @@ else  # Not windows
     activate=.venv/bin/activate
     include="$(find -name site-packages)/include.pth"
 fi
+
+note_14="${home_dir}/note_14"
 
 source $activate
 
