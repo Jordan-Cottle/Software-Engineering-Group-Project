@@ -8,7 +8,7 @@ import os
 
 from flask import Flask
 
-from database import ENGINE, inject_session, close_session
+from database import inject_session, close_session
 
 server_dir = os.path.dirname(__file__)
 statics = os.path.join(os.path.split(server_dir)[0], "static")
