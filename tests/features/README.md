@@ -1,0 +1,1 @@
+This directory contains `Gherkin` style feature tests for the project.
