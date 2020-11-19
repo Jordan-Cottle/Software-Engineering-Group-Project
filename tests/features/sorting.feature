@@ -1,4 +1,4 @@
-Feature: Sorting
+Feature:  Sorting
     In order to organize my notes
     As a user
     I want to organize my notes by views, rating, and alphabetically
