@@ -1,13 +1,13 @@
 Feature: Comment on Note
     In order to express my opinion
     As a user
-    I want to comment on an user's notes 
+    I want to comment on a user's notes 
 
     Background:
-        And a user "Joe" exists
-        And a user "Bob" exists
-        Given a note "Joe's Math Formulas" is owned by "Joe"
-        Given the note "Joe's Math Formulas" is "public"
+        Given a user "Joe" exists
+        Given a user "Bob" exists
+        And a note "Joe's Math Formulas" is owned by "Joe"
+        And the note "Joe's Math Formulas" is "public"
 
     Scenario: Bob comments on Joe's note
         Given I am logged in as "Bob"

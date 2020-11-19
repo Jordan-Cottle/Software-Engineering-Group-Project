@@ -4,23 +4,23 @@ Feature:  Rating
     I want to rate other user's notes and users to rate my notes
 
    Background:
-        And a user "Joe" exists
+        Given a user "Joe" exists
         And a user "Bob" exists
-        Given a note "Joe's Math Formulas" is owned by "Joe"
-        Given the note "Joe's Math Formulas" is "public"
+        And a note "Joe's Math Formulas" by "Joe" exists
+        And the note "Joe's Math Formulas" is "public"
 
     Scenario: Bob rates Joe's note
         Given I am logged in as "Bob"
         And I am on the note detail page for "Joe's Math Formulas"
-        When I click the third star
+        When I click star number "3"
         Then the note "Joe's Math Formulas" has my 3 star rating
 
     Scenario: Bob tries to rate Joe's note after previously rating. 
         Given I am logged in as "Bob"
-        Given I have already rated Joe's note
+        And I have already rated Joe's note
         And I am on the note detail page for "Joe's Math Formulas"
-        When I click the second star
-        Then the note "Joe's Math Formulas" has my updated 2 star rating
+        When I click star number "2"
+        Then the note "Joe's Math Formulas" has my updated "2" star rating
 
 
 
