@@ -5,7 +5,7 @@ Feature: Comment on Note
 
     Background:
         Given a user "Joe" exists
-        Given a user "Bob" exists
+        And a user "Bob" exists
         And a note "Joe's Math Formulas" is owned by "Joe"
         And the note "Joe's Math Formulas" is "public"
 
