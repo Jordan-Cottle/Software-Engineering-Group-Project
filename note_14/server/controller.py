@@ -3,11 +3,11 @@
 Flask routes should be defined here.
 """
 
-from server import app
+from database import create_user, get_note, get_notes
+from flask import g, redirect, render_template, request
+from flask.helpers import url_for
 
-from flask import render_template, g
-
-from database import get_note, get_notes
+from server import app, login
 
 
 @app.route("/")
@@ -26,3 +26,42 @@ def list_notes():
 def view_note(note_id):
     """ Render individual note page. """
     return render_template("note.html", note=get_note(g.session, int(note_id)))
+
+
+@app.route("/login", methods=["GET", "POST"])
+def user_login():
+    """ Render login page and process login requests. """
+
+    if request.method == "POST":
+        form = request.form
+
+        user_name = form["user_name"]
+        password = form["password"]
+
+        # Login and validate the user.
+        login(user_name, password)
+
+        return redirect(url_for("main_page"))
+
+    return render_template("login.html")
+
+
+@app.route("/register", methods=["GET", "POST"])
+def create_account():
+    """ Render register page and process register requests. """
+
+    if request.method == "POST":
+        form = request.form
+
+        user_name = form["user_name"]
+        password = form["password"]
+
+        # Register and Login the user.
+        create_user(g.session, user_name, password)
+        g.session.commit()
+
+        login(user_name, password)
+
+        return redirect(url_for("main_page"))
+
+    return render_template("register.html")
