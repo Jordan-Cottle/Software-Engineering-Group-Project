@@ -14,7 +14,3 @@ Base = declarative_base()
 
 from .notes import Note, NoteSection
 from .users import User
-
-from database import ENGINE
-
-Base.metadata.create_all(ENGINE)
