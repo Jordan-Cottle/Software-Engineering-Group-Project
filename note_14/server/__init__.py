@@ -25,4 +25,5 @@ login_manager = LoginManager(app)
 app.before_request(inject_session)
 app.after_request(close_session)
 
+from .users import login
 from .controller import *
