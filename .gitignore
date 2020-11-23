@@ -130,3 +130,6 @@ dmypy.json
 
 .vscode/
 *.db
+
+# Don't public secrets
+secrets.py

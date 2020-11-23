@@ -14,7 +14,7 @@ class User(Base):
     __tablename__ = "user"
 
     id = Column("user_id", Integer, primary_key=True)
-    name = Column("name", String)
+    name = Column("name", String, unique=True, index=True)
     password = Column("password", String)
     salt = Column("salt", String)
 

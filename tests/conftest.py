@@ -18,7 +18,7 @@ def client_fixture():
 
 @pytest.fixture(name="database")
 def test_engine():
-    engine = create_engine(f"sqlite:///:memory:", echo=True)
+    engine = create_engine(f"sqlite:///:memory:")
     Base.metadata.create_all(engine)
 
     return engine

@@ -9,6 +9,6 @@ Scenario: Joe views notes as a list
         And I am logged in as "Joe"
         And a note "How to Train My Dinosaur" by "Joe" exists
         And a note "Bank Heist Notes" by "Joe" exists
-        When I go to the "Notes" page
+        When I navigate to "/notes"
         Then I should see "How to Train My Dinosaur"
         And I should see "Bank Heist Notes"
