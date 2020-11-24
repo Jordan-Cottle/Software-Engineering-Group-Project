@@ -2,3 +2,8 @@
 
 ignore=
     secrets.py
+
+[MISCELLANEOUS]
+
+# Don't flag notes
+notes=

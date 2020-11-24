@@ -5,7 +5,7 @@ create_note: Create a new note in the database
 
 get_note: Get a single note from the database
 
-get_notes: Get all the notes from the database
+get_notes: Get all the notes from the database that a user can view
 """
 
 from datetime import date
@@ -13,9 +13,14 @@ from datetime import date
 from models import Note, NoteSection
 
 
-def get_notes(session):
-    """ Get all notes from the database. """
-    return session.query(Note).all()
+def get_notes(session, user):  # pylint: disable=unused-argument
+    """ Get all notes from the database that a user can see. """
+
+    notes = user.notes
+
+    # TODO: Add notes that user has view permission for
+
+    return notes
 
 
 def get_note(session, note_id):
