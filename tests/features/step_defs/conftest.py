@@ -76,3 +76,10 @@ def check_response(test_session, text):
     data = test_session.response.get_data(as_text=True)
 
     assert text in data, f"Response should contain {text}"
+
+
+@then(parse('I should not see "{text}"'))
+def check_response(test_session, text):
+    data = test_session.response.get_data(as_text=True)
+
+    assert text not in data, f"Response should not contain {text}"
