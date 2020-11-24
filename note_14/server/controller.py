@@ -41,7 +41,7 @@ def user_login():
         password = form["password"]
 
         # Login and validate the user.
-        login(user_name, password)
+        login(g.session, user_name, password)
 
         return redirect(url_for("main_page"))
 
@@ -62,7 +62,7 @@ def create_account():
         create_user(g.session, user_name, password)
         g.session.commit()
 
-        login(user_name, password)
+        login(g.session, user_name, password)
 
         return redirect(url_for("main_page"))
 
