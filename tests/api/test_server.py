@@ -1,7 +1,4 @@
-from server import app
-from database import get_note, get_notes
-
-from database.notes import DATE_FORMAT
+from models.notes import DATE_FORMAT
 
 
 def assert_nav_exists(page_data):

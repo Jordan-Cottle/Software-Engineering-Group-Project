@@ -12,6 +12,9 @@ from sqlalchemy.orm import relationship
 from models import Base
 
 
+DATE_FORMAT = "%B %d, %Y"
+
+
 class Note(Base):
     """ Represents a Note. """
 
@@ -35,7 +38,7 @@ class Note(Base):
     def date(self):
         """ Get a formatted string version of the created date. """
 
-        return self.created.strftime("%B %d, %Y")
+        return self.created.strftime(DATE_FORMAT)
 
 
 class NoteSection(Base):

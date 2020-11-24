@@ -13,9 +13,6 @@ from datetime import date
 from models import Note, NoteSection
 
 
-DATE_FORMAT = "%B %d, %Y"
-
-
 def get_notes(session):
     """ Get all notes from the database. """
     return session.query(Note).all()
