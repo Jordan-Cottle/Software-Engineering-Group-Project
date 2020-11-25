@@ -3,10 +3,20 @@
 from pytest_bdd import given, when, then
 from pytest_bdd.parsers import parse
 
-from database import create_user, create_note, get_user, get_notes
-from models import User
+from database import create_user, create_note, get_user
+from models import User, Note
 
 TEST_PASSWORD = "123456789"
+
+
+def find_note(session, note_title):
+    """ Get the id of a note based on it's title. """
+
+    notes = session.query(Note).all()
+
+    for note in notes:
+        if note.title == note_title:
+            return note
 
 
 class TestSession:
@@ -69,6 +79,13 @@ def note_exists(session, note_title, user_name):
 @when(parse('I navigate to "{route}"'))
 def request_route(test_session, route):
     test_session.get(route)
+
+
+@when(parse('I navigate to the note detail page for "{note_title}"'))
+def request_route(session, test_session, note_title):
+    note = find_note(session, note_title)
+
+    test_session.get(f"notes/{note.id}")
 
 
 @then(parse('I should see "{text}"'))
