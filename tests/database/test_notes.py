@@ -43,9 +43,9 @@ def test_get_note(session, user):
     assert retrieved_note.owner == note.owner, "Note retrieved should match one created"
 
 
-def test_get_notes(session, notes):
+def test_get_notes(session, notes, user):
 
-    retrieved_notes = get_notes(session)
+    retrieved_notes = get_notes(session, user)
     for note, retrieved_note in zip(notes, retrieved_notes):
         assert retrieved_note.id == note.id, "Note retrieved should match one created"
         assert (

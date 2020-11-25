@@ -6,6 +6,7 @@ Flask routes should be defined here.
 from database import create_user, get_note, get_notes
 from flask import g, redirect, render_template, request
 from flask.helpers import url_for
+from flask_login import current_user, login_required
 
 from server import app, login
 
@@ -17,9 +18,10 @@ def main_page():
 
 
 @app.route("/notes")
+@login_required
 def list_notes():
     """ Render the notes list page. """
-    return render_template("notes.html", notes=get_notes(g.session))
+    return render_template("notes.html", notes=get_notes(g.session, current_user))
 
 
 @app.route("/notes/<note_id>")
@@ -39,7 +41,7 @@ def user_login():
         password = form["password"]
 
         # Login and validate the user.
-        login(user_name, password)
+        login(g.session, user_name, password)
 
         return redirect(url_for("main_page"))
 
@@ -60,7 +62,7 @@ def create_account():
         create_user(g.session, user_name, password)
         g.session.commit()
 
-        login(user_name, password)
+        login(g.session, user_name, password)
 
         return redirect(url_for("main_page"))
 
