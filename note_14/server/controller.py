@@ -25,9 +25,12 @@ def list_notes():
 
 
 @app.route("/notes/<note_id>")
+@login_required
 def view_note(note_id):
     """ Render individual note page. """
-    return render_template("note.html", note=get_note(g.session, int(note_id)))
+    return render_template(
+        "note.html", note=get_note(g.session, int(note_id), current_user)
+    )
 
 
 @app.route("/login", methods=["GET", "POST"])

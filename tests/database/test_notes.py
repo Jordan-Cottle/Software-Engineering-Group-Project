@@ -1,7 +1,5 @@
 from database import get_note, get_notes, create_note
 
-from models import NoteSection
-
 
 def test_create_simple_note(session, user):
     title = "Test Note"
@@ -35,7 +33,7 @@ def test_get_note(session, user):
     note = create_note(session, title, text, user)
     session.commit()
 
-    retrieved_note = get_note(session, note.id)
+    retrieved_note = get_note(session, note.id, user)
 
     assert retrieved_note.id == note.id, "Note retrieved should match one created"
     assert retrieved_note.title == note.title, "Note retrieved should match one created"
