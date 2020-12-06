@@ -59,7 +59,6 @@ def edit_note(session, title, text, note_id):
     note = session.query(Note).filter_by(id=note_id).one()
     note.title = title
     note.text = text
-    session.add(note)
 
 
 def delete_note(session, note_id):
