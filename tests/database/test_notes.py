@@ -62,7 +62,7 @@ def test_edit_note(session, user):
     title = "This should be edited"
     text = "This should be edited"
     edtitle = "This has been edited"
-    edtext = "This has been edited"
+    edtext = "This has \n been edited"
     note = create_note(session, title, text, user)
     session.commit()
 
@@ -78,7 +78,8 @@ def test_edit_note(session, user):
     ), "Editing should not change number of notes in database"
     assert editednote.title == edtitle, "Editing note should change the title"
     assert editednote.text == edtext, "Editing note should change the text"
-    assert sections_before == sections_after
+    assert sections_before == 1
+    assert sections_after == 2
 
 
 def test_delete_note(session, user):
