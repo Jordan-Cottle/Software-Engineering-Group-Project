@@ -56,7 +56,7 @@ def create_note(session, title, text, user):
 
 def edit_note(session, title, text, note_id, user):
     """ edit an existing note in the database. """
-    note = get_note(note_id, user)
+    note = get_note(session, note_id, user)
     note.title = title
     note.text = text
 
