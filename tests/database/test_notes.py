@@ -57,7 +57,22 @@ def test_get_notes(session, notes, user):
             retrieved_note.owner == note.owner
         ), "Note retrieved should match one created"
 
+def test_edit_note(session,user):
+    title = "This should be edited"
+    text = "This should be edited"
+    edtitle = "This has been edited"
+    edtext = "This has been edited"
+    note = create_note(session, title, text, user)
+    session.commit()
 
+    before_edit = session.query(Note).filter(Note.owner == user.id).count()
+    edit_note(session, edtitle, edtext, note.id)
+    after_edit = session.query(Note).filter(Note.owner == user.id).count()
+    editednote = getnote(session, note.id, user)
+    assert(before_edit==after_edit),"Editing should not change number of notes in database"
+    assert(editednote.title==edtitle), "Editing note should change the title"
+    assert(editednote.text==edtext), "Editing note should change the text"
+    
 def test_delete_note(session, user):
     title = "Delete this note"
     text = "This note will not exist"
