@@ -52,3 +52,9 @@ def create_note(session, title, text, user):
         note.sections.append(NoteSection(content=line, index=i))
 
     return note
+
+
+def delete_note(session, note_id):
+    """ Delete a note from the database """
+    note = session.query(Note).filter_by(id=note_id).one()
+    session.delete(note)
