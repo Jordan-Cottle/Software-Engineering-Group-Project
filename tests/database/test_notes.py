@@ -67,7 +67,7 @@ def test_edit_note(session, user):
     session.commit()
 
     before_edit = session.query(Note).filter(Note.owner == user.id).count()
-    edit_note(session, edtitle, edtext, note.id)
+    edit_note(session, edtitle, edtext, note.id, user)
     after_edit = session.query(Note).filter(Note.owner == user.id).count()
     editednote = get_note(session, note.id, user)
 
