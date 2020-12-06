@@ -44,6 +44,19 @@ def test_user(session):
     return user
 
 
+@pytest.fixture(name="note")
+def test_note(session, user):
+    note = create_note(
+        session,
+        f"Test Note",
+        f"Note is for tests only.\nThis should not be in the real database",
+        user,
+    )
+    session.commit()
+
+    return note
+
+
 @pytest.fixture(name="notes")
 def test_notes(session, user):
     notes = []

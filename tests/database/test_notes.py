@@ -28,12 +28,7 @@ def test_create_multiline_note(session, user):
     assert len(note.sections) == 2, "Each line of a note should be it's own section"
 
 
-def test_get_note(session, user):
-    title = "Test Note"
-    text = "This note has\nmultiple lines."
-    note = create_note(session, title, text, user)
-    session.commit()
-
+def test_get_note(session, user, note):
     retrieved_note = get_note(session, note.id, user)
 
     assert retrieved_note.id == note.id, "Note retrieved should match one created"
@@ -58,6 +53,19 @@ def test_get_notes(session, notes, user):
         ), "Note retrieved should match one created"
 
 
+def test_delete_note(session, user, note):
+    before_delete = session.query(Note).filter(Note.owner == user.id).count()
+    delete_note(session, note.id)
+    after_delete = session.query(Note).filter(Note.owner == user.id).count()
+
+    assert (
+        before_delete > after_delete
+    ), "Delete should reduce the number of notes in the database."
+    assert (
+        before_delete == after_delete + 1
+    ), "There should be exactly one less note in the database"
+
+
 def test_edit_note(session, user):
     title = "This should be edited"
     text = "This should be edited"
@@ -80,21 +88,3 @@ def test_edit_note(session, user):
     assert editednote.text == edtext, "Editing note should change the text"
     assert sections_before == 1
     assert sections_after == 2
-
-
-def test_delete_note(session, user):
-    title = "Delete this note"
-    text = "This note will not exist"
-    note = create_note(session, title, text, user)
-    session.commit()
-
-    before_delete = session.query(Note).filter(Note.owner == user.id).count()
-    delete_note(session, note.id)
-    after_delete = session.query(Note).filter(Note.owner == user.id).count()
-
-    assert (
-        before_delete > after_delete
-    ), "Delete should reduce the number of notes in the database."
-    assert (
-        before_delete == after_delete + 1
-    ), "There should be exactly one less note in the database"
