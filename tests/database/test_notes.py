@@ -70,7 +70,7 @@ def test_edit_note(session, user):
     edit_note(session, edtitle, edtext, note.id)
     after_edit = session.query(Note).filter(Note.owner == user.id).count()
     editednote = getnote(session, note.id, user)
-    
+
     assert (
         before_edit == after_edit
     ), "Editing should not change number of notes in database"
