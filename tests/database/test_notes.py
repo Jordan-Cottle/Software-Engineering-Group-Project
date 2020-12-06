@@ -1,4 +1,4 @@
-from database import get_note, get_notes, create_note, delete_note
+from database import get_note, get_notes, create_note, delete_note, edit_note
 from models import Note
 
 
@@ -69,7 +69,7 @@ def test_edit_note(session, user):
     before_edit = session.query(Note).filter(Note.owner == user.id).count()
     edit_note(session, edtitle, edtext, note.id)
     after_edit = session.query(Note).filter(Note.owner == user.id).count()
-    editednote = getnote(session, note.id, user)
+    editednote = get_note(session, note.id, user)
 
     assert (
         before_edit == after_edit
