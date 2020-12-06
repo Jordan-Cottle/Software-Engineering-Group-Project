@@ -66,12 +66,12 @@ def test_edit_note(session, user):
     note = create_note(session, title, text, user)
     session.commit()
 
-    sections_before = session.query(Note).filter(Note.owner == user.id).sections.count()
+    sections_before = len(note.sections)
     before_edit = session.query(Note).filter(Note.owner == user.id).count()
     edit_note(session, edtitle, edtext, note.id, user)
     after_edit = session.query(Note).filter(Note.owner == user.id).count()
     editednote = get_note(session, note.id, user)
-    sections_after = session.query(Note).filter(Note.owner == user.id).sections.count()
+    sections_after = len(note.sections)
 
     assert (
         before_edit == after_edit
