@@ -1,6 +1,6 @@
-from database import get_note, get_notes, create_note
+from database import get_note, get_notes, create_note, delete_note
 
-from models import NoteSection
+from models import NoteSection, Note
 
 
 def test_create_simple_note(session, user):
@@ -57,3 +57,20 @@ def test_get_notes(session, notes):
         assert (
             retrieved_note.owner == note.owner
         ), "Note retrieved should match one created"
+
+def test_delete_note(session, user):
+    title = "Delete this note"
+    text = "This note will not exist"
+    note = create_note(session, title, text, user)
+    session.commit()
+    
+    test_filter_count = 1
+    test_count = 0
+    before_delete = session.query(Note).filter(Note.owner == user.id).count()
+    delete_note(session, note.id)
+    after_delete = session.query(Note).filter(Note.owner == user.id).count()
+
+    assert test_filter_count == before_delete, "The filter count test and before delete should be 1"
+    assert test_count != before_delete, "Test count should not equal before delete"
+    assert test_count == after_delete, "The count should be 0"
+    assert before_delete != after_delete, "Before delete should be 1 and after delete should be 0, so they're not equal."

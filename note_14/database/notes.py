@@ -20,6 +20,12 @@ def get_notes(session):
     """ Get all notes from the database. """
     return session.query(Note).all()
 
+def delete_note(session,note_id):
+    """ Delete a note from the database """
+    delete_note = session.query(Note).filter_by(id=note_id).one()
+    session.delete(delete_note)
+    session.commit()
+
 
 def get_note(session, note_id):
     """ Get a single note from the database. """
