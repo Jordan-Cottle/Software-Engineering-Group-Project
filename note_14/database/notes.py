@@ -54,9 +54,9 @@ def create_note(session, title, text, user):
     return note
 
 
-def edit_note(session, title, text, note_id):
+def edit_note(session, title, text, note_id, user):
     """ edit an existing note in the database. """
-    note = session.query(Note).filter_by(id=note_id).one()
+    note = get_note(note_id, user)
     note.title = title
     note.text = text
 
