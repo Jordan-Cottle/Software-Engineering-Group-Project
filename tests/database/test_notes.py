@@ -57,6 +57,7 @@ def test_get_notes(session, notes, user):
             retrieved_note.owner == note.owner
         ), "Note retrieved should match one created"
 
+
 def test_delete_note(session, user):
     title = "Delete this note"
     text = "This note will not exist"
@@ -69,7 +70,7 @@ def test_delete_note(session, user):
 
     assert (
         before_delete > after_delete
-        ), "Delete should reduce the number of notes in the database."
+    ), "Delete should reduce the number of notes in the database."
     assert (
         before_delete == after_delete + 1
-        ), "There should be exactly one less note in the database"
+    ), "There should be exactly one less note in the database"
