@@ -66,16 +66,19 @@ def test_edit_note(session, user):
     note = create_note(session, title, text, user)
     session.commit()
 
+    sections_before = session.query(Note).filter(Note.owner == user.id).sections.count()
     before_edit = session.query(Note).filter(Note.owner == user.id).count()
     edit_note(session, edtitle, edtext, note.id, user)
     after_edit = session.query(Note).filter(Note.owner == user.id).count()
     editednote = get_note(session, note.id, user)
+    sections_after = session.query(Note).filter(Note.owner == user.id).sections.count()
 
     assert (
         before_edit == after_edit
     ), "Editing should not change number of notes in database"
     assert editednote.title == edtitle, "Editing note should change the title"
     assert editednote.text == edtext, "Editing note should change the text"
+    assert sections_before == sections_after
 
 
 def test_delete_note(session, user):
