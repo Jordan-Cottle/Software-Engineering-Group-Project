@@ -75,12 +75,8 @@ def test_edit_note(session,user):
     assert (
         before_edit == after_edit
     ),"Editing should not change number of notes in database"
-    assert (
-        editednote.title == edtitle
-    ), "Editing note should change the title"
-    assert (
-        editednote.text == edtext
-    ), "Editing note should change the text"
+    assert editednote.title == edtitle, "Editing note should change the title"
+    assert editednote.text == edtext, "Editing note should change the text"
 
 
 def test_delete_note(session, user):
