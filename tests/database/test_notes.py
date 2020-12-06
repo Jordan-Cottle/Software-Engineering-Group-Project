@@ -58,7 +58,6 @@ def test_get_notes(session, notes, user):
         ), "Note retrieved should match one created"
 
 
-
 def test_edit_note(session,user):
     title = "This should be edited"
     text = "This should be edited"
@@ -74,7 +73,7 @@ def test_edit_note(session,user):
     
     assert (
         before_edit == after_edit
-    ),"Editing should not change number of notes in database"
+    ), "Editing should not change number of notes in database"
     assert editednote.title == edtitle, "Editing note should change the title"
     assert editednote.text == edtext, "Editing note should change the text"
 
