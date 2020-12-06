@@ -45,7 +45,7 @@ def test_user(session):
 
 
 @pytest.fixture(name="note")
-def test_notes(session, user):
+def test_note(session, user):
     note = create_note(
         session,
         f"Test Note",
