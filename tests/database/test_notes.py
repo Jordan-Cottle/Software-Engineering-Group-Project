@@ -58,7 +58,7 @@ def test_get_notes(session, notes, user):
         ), "Note retrieved should match one created"
 
 
-def test_edit_note(session,user):
+def test_edit_note(session, user):
     title = "This should be edited"
     text = "This should be edited"
     edtitle = "This has been edited"
