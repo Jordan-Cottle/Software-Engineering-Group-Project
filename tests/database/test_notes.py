@@ -1,4 +1,10 @@
-from database import get_note, get_notes, create_note, delete_note
+from database import (
+    get_note,
+    get_notes,
+    create_note,
+    delete_note,
+    create_rating,
+)
 from models import Note
 
 
@@ -64,3 +70,24 @@ def test_delete_note(session, user, note):
     assert (
         before_delete == after_delete + 1
     ), "There should be exactly one less note in the database"
+
+
+def test_create_rating(session, user, note):
+
+    rating = create_rating(session, user, note, 5)
+    session.commit()
+
+    assert rating.note_id == note.id, "Rating note ID should match note ID created"
+    assert rating.owner == user.id, "Rating owner should match user's ID"
+    assert rating.value == 5, "The value of rating should match the value of 5"
+
+
+def test_average_ratings(session, user, other_user, note):
+
+    rating1 = create_rating(session, user, note, 1)
+
+    rating2 = create_rating(session, other_user, note, 3)
+
+    session.commit()
+
+    assert note.rating == 2, "The note's rating should match 2"
