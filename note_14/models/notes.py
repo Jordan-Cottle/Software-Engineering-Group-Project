@@ -121,7 +121,6 @@ class Comment(Base):
     note_id = Column(Integer, ForeignKey("note.note_id"), index=True)
     owner = Column(Integer, ForeignKey("user.user_id"), index=True)
     body = Column(String)
-    created = Column(Date)
     date = Column("date", DateTime, default=datetime.datetime.today)
 
     def __str__(self):
