@@ -3,10 +3,18 @@
 {% block body %}
 
 <form action="{{ url_for('create_account') }}" method="post">
+    <p><label>First Name </label></p>
+    <p> <input type="text" name="first_name" placeholder="firstname" /></p>
+    <p><label>Last Name </label></p>
+    <p> <input type="text" name="last_name" placeholder="lastname" /></p>
+    <p><label>Email </label></p>
+    <p> <input type="text" name="email" placeholder="email" /></p>
     <p><label>Username </label></p>
     <p> <input type="text" name="user_name" placeholder="username" /></p>
     <p><label>Password</label></p>
     <p> <input type="password" name="password" placeholder="password" /></p>
+    <p><label>Re-enter Password</label></p>
+    <p> <input type="password" name="re_password" placeholder="re_password" /></p>
     <p><input type="submit" value="Register" /></p>
 </form>
 
