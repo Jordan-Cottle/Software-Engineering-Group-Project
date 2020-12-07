@@ -78,9 +78,7 @@ def test_create_rating(session, user, note):
     rating = create_rating(session, user, note, 5)
     session.commit()
 
-    assert (
-        rating.note_id == note.id
-    ), "Rating note ID should match note ID created"
+    assert rating.note_id == note.id, "Rating note ID should match note ID created"
     assert rating.owner == user.id, "Rating owner should match user's ID"
     assert rating.value == 5, "The value of rating should match the value of 5"
 
