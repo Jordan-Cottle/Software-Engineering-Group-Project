@@ -8,7 +8,7 @@ NoteSection -- Represents a single section of a note.
 Rating -- Represents the rating of a single note
 """
 
-from sqlalchemy import Column, Integer, String, Date, ForeignKey
+from sqlalchemy import Column, Integer, String, Date, ForeignKey, LargeBinary
 from sqlalchemy.orm import relationship
 
 from models import Base
@@ -28,6 +28,8 @@ class Note(Base):
     owner = Column(Integer, ForeignKey("user.user_id"))
     sections = relationship("NoteSection", order_by="NoteSection.index")
     ratings = relationship("Rating")
+    comments = relationship("Comment")
+    attachments = relationship("Attachment")
 
     @property
     def text(self):
@@ -86,3 +88,41 @@ class Rating(Base):
         return (
             f"Rating (owner={self.owner}, note_id={self.note_id}, value={self.value})"
         )
+
+
+class Attachment(Base):
+    """ Represents a attachment on a note """
+
+    __tablename__ = "attachment"
+    id = Column("attachment_id", Integer, primary_key=True)
+    note_id = Column(Integer, ForeignKey("note.note_id"), index=True)
+    owner = Column(Integer, ForeignKey("user.user_id"), index=True)
+    data = Column("data", LargeBinary)
+
+    def __str__(self):
+        return f"{self.data}"
+
+    def __repr__(self) -> str:
+        return f"Attachment (owner={self.owner}, note_id={self.note_id})"
+
+
+class Comment(Base):
+    """ Represents a comment on a note """
+
+    __tablename__ = "comment"
+    id = Column("comment_id", Integer, primary_key=True)
+    note_id = Column(Integer, ForeignKey("note.note_id"), index=True)
+    owner = Column(Integer, ForeignKey("user.user_id"), index=True)
+    body = Column(String)
+
+    @property
+    def date(self):
+        """ Get a formatted string version of the created date. """
+
+        return self.created.strftime(DATE_FORMAT)
+
+    def __str__(self):
+        return f"{self.body}"
+
+    def __repr__(self) -> str:
+        return f"Comment (owner={self.owner}, note_id={self.note_id})"
