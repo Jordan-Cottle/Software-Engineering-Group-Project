@@ -39,6 +39,14 @@ class Note(Base):
 
         return "\n".join(lines)
 
+    @text.setter
+    def text(self, value):
+        sections = [
+            NoteSection(content=line, index=i)
+            for i, line in enumerate(value.split("\n"))
+        ]
+        self.sections = sections
+
     @property
     def date(self):
         """ Get a formatted string version of the created date. """
