@@ -4,7 +4,6 @@ from database import (
     create_note,
     delete_note,
     create_rating,
-    create_user,
 )
 from models import Note
 
