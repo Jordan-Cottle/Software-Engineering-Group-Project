@@ -116,6 +116,7 @@ class Attachment(Base):
 
 class Comment(Base):
     """ Represents a comment on a note """
+
     import datetime
 
     __tablename__ = "comment"
@@ -124,7 +125,7 @@ class Comment(Base):
     owner = Column(Integer, ForeignKey("user.user_id"), index=True)
     body = Column(String)
     created = Column(Date)
-    date = Column('date', DateTime, default = datetime.datetime.today)
+    date = Column("date", DateTime, default=datetime.datetime.today)
 
     def __str__(self):
         return f"{self.body} : {self.date}"
