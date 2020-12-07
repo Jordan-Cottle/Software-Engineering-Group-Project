@@ -44,6 +44,13 @@ def test_user(session):
     return user
 
 
+@pytest.fixture(name="other_user")
+def test_other_user(session):
+    other_user = create_user(session, "Other", "1234")
+    session.commit()
+    return other_user
+
+
 @pytest.fixture(name="note")
 def test_note(session, user):
     note = create_note(
