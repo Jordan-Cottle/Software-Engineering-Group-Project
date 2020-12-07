@@ -58,3 +58,10 @@ def delete_note(session, note_id):
     """ Delete a note from the database """
     note = session.query(Note).filter_by(id=note_id).one()
     session.delete(note)
+
+
+def edit_note(session, title, text, note_id, user):
+    """ edit an existing note in the database. """
+    note = get_note(session, note_id, user)
+    note.title = title
+    note.text = text

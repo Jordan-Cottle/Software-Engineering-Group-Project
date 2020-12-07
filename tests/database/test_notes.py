@@ -4,6 +4,7 @@ from database import (
     create_note,
     delete_note,
     create_rating,
+    edit_note,
 )
 from models import Note
 
@@ -91,3 +92,23 @@ def test_average_ratings(session, user, other_user, note):
     session.commit()
 
     assert note.rating == 2, "The note's rating should match 2"
+
+
+def test_edit_note(session, user, note):
+    edtitle = "This has been edited"
+    edtext = "This has \n been edited"
+
+    sections_before = len(note.sections)
+    before_edit = session.query(Note).filter(Note.owner == user.id).count()
+    edit_note(session, edtitle, edtext, note.id, user)
+    after_edit = session.query(Note).filter(Note.owner == user.id).count()
+    editednote = get_note(session, note.id, user)
+    sections_after = len(editednote.sections)
+
+    assert (
+        before_edit == after_edit
+    ), "Editing should not change number of notes in database"
+    assert editednote.title == edtitle, "Editing note should change the title"
+    assert editednote.text == edtext, "Editing note should change the text"
+    assert sections_before == 2
+    assert sections_after == 2
