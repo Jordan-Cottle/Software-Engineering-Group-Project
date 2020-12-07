@@ -8,7 +8,7 @@ NoteSection -- Represents a single section of a note.
 Rating -- Represents the rating of a single note
 """
 
-from sqlalchemy import Column, Integer, String, Date, ForeignKey, LargeBinary
+from sqlalchemy import Column, Integer, String, Date, ForeignKey, LargeBinary, DateTime
 from sqlalchemy.orm import relationship
 
 from models import Base
@@ -116,6 +116,7 @@ class Attachment(Base):
 
 class Comment(Base):
     """ Represents a comment on a note """
+    import datetime
 
     __tablename__ = "comment"
     id = Column("comment_id", Integer, primary_key=True)
@@ -123,14 +124,10 @@ class Comment(Base):
     owner = Column(Integer, ForeignKey("user.user_id"), index=True)
     body = Column(String)
     created = Column(Date)
-
-    @property
-    def date(self):
-        """ Get a formatted string version of the created date. """
-        return self.created.strftime(DATE_FORMAT)
+    date = Column('date', DateTime, default = datetime.datetime.today)
 
     def __str__(self):
-        return f"{self.body}"
+        return f"{self.body} : {self.date}"
 
     def __repr__(self) -> str:
         return f"Comment (owner={self.owner}, note_id={self.note_id})"
