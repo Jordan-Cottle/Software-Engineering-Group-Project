@@ -66,6 +66,7 @@ def test_delete_note(session, user, note):
     ), "There should be exactly one less note in the database"
 
 
+<<<<<<< HEAD
 def test_edit_note(session, user):
     title = "This should be edited"
     text = "This should be edited"
@@ -88,3 +89,24 @@ def test_edit_note(session, user):
     assert editednote.text == edtext, "Editing note should change the text"
     assert sections_before == 1
     assert sections_after == 2
+=======
+def test_create_rating(session, user, note):
+
+    rating = create_rating(session, user, note, 5)
+    session.commit()
+
+    assert rating.note_id == note.id, "Rating note ID should match note ID created"
+    assert rating.owner == user.id, "Rating owner should match user's ID"
+    assert rating.value == 5, "The value of rating should match the value of 5"
+
+
+def test_average_ratings(session, user, other_user, note):
+
+    rating1 = create_rating(session, user, note, 1)
+
+    rating2 = create_rating(session, other_user, note, 3)
+
+    session.commit()
+
+    assert note.rating == 2, "The note's rating should match 2"
+>>>>>>> 258dab7e232fc6d8881ae4bc27abf7459847b577

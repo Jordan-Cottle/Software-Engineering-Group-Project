@@ -4,6 +4,8 @@ Module for defining database models involving notes
 Note -- The main model for representing a note
 
 NoteSection -- Represents a single section of a note.
+
+Rating -- Represents the rating of a single note
 """
 
 from sqlalchemy import Column, Integer, String, Date, ForeignKey
@@ -25,6 +27,7 @@ class Note(Base):
     views = Column(Integer)
     owner = Column(Integer, ForeignKey("user.user_id"))
     sections = relationship("NoteSection", order_by="NoteSection.index")
+    ratings = relationship("Rating")
 
     @property
     def text(self):
@@ -48,6 +51,11 @@ class Note(Base):
 
         return self.created.strftime(DATE_FORMAT)
 
+    @property
+    def rating(self):
+        """ Computes the average of ratings for a single note """
+        return sum(rating.value for rating in self.ratings) / len(self.ratings)
+
 
 class NoteSection(Base):
     """ Represents a section within a Note. """
@@ -68,4 +76,21 @@ class NoteSection(Base):
             f"note_id={self.note_id}, "
             f"content='{self.content}', "
             f"index={self.index})"
+        )
+
+
+class Rating(Base):
+    """ Represents a rating of a note """
+
+    __tablename__ = "rating"
+    owner = Column(Integer, ForeignKey("user.user_id"), index=True, primary_key=True)
+    note_id = Column(Integer, ForeignKey("note.note_id"), index=True, primary_key=True)
+    value = Column("value", Integer)
+
+    def __str__(self):
+        return f"{self.value}"
+
+    def __repr__(self) -> str:
+        return (
+            f"Rating (owner={self.owner}, note_id={self.note_id}, value={self.value})"
         )

@@ -12,5 +12,5 @@ from sqlalchemy.ext.declarative import declarative_base
 Base = declarative_base()
 
 
-from .notes import Note, NoteSection
+from .notes import Note, NoteSection, Rating
 from .users import User
