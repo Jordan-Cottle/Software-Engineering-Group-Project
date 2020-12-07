@@ -114,11 +114,10 @@ class Comment(Base):
     note_id = Column(Integer, ForeignKey("note.note_id"), index=True)
     owner = Column(Integer, ForeignKey("user.user_id"), index=True)
     body = Column(String)
-
+    created = Column(Date)
     @property
     def date(self):
         """ Get a formatted string version of the created date. """
-
         return self.created.strftime(DATE_FORMAT)
 
     def __str__(self):
