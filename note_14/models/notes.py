@@ -10,7 +10,7 @@ Rating -- Represents the rating of a single note
 
 from sqlalchemy import Column, Integer, String, Date, ForeignKey, LargeBinary, DateTime
 from sqlalchemy.orm import relationship
-
+import datetime
 from models import Base
 
 
@@ -116,8 +116,6 @@ class Attachment(Base):
 
 class Comment(Base):
     """ Represents a comment on a note """
-
-    import datetime
 
     __tablename__ = "comment"
     id = Column("comment_id", Integer, primary_key=True)
