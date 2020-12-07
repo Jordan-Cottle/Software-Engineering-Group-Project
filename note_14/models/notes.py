@@ -115,6 +115,7 @@ class Comment(Base):
     owner = Column(Integer, ForeignKey("user.user_id"), index=True)
     body = Column(String)
     created = Column(Date)
+
     @property
     def date(self):
         """ Get a formatted string version of the created date. """
