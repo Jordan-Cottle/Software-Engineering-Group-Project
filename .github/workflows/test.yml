@@ -16,12 +16,13 @@ jobs:
       - name: Check formatting
         run: |
           source .venv/bin/activate
-          black note_14
+          black --diff --color note_14 tests
+          black --check note_14 tests
       - name: Check pylint
-        run : |
+        run: |
           source .venv/bin/activate
           pylint note_14
       - name: Run tests
         run: |
           source .venv/bin/activate
-          pytest tests
+          ./test.sh
