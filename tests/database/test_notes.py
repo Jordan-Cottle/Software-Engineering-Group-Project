@@ -82,7 +82,7 @@ def test_create_rating(session, user, note):
     assert rating.value == 5, "The value of rating should match the value of 5"
 
 
-def test_average_ratings(session, user, other_user, note, notes):
+def test_average_ratings(session, user, other_user, note):
 
     rating1 = create_rating(session, user, note, 1)
 
