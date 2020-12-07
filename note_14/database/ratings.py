@@ -1,6 +1,5 @@
 """ 
 This module contains utilities for accessing rating data in the database 
-
 create_rating: Creates a rating for a note.
 """
 
