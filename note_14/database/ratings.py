@@ -1,9 +1,10 @@
 """ 
 This module contains utilities for accessing rating data in the database 
 
+create_rating: Creates a rating for a note.
 """
 
-from models import Note, User, Rating
+from models import Rating
 
 
 def create_rating(session, user, note, rating):
