@@ -25,10 +25,12 @@ class Note(Base):
     created = Column(Date)
     views = Column(Integer)
     owner = Column(Integer, ForeignKey("user.user_id"))
-    sections = relationship("NoteSection", order_by="NoteSection.index")
-    ratings = relationship("Rating")
-    comments = relationship("Comment")
-    attachments = relationship("Attachment")
+    sections = relationship(
+        "NoteSection", order_by="NoteSection.index", cascade="all, delete-orphan"
+    )
+    ratings = relationship("Rating", cascade="all, delete-orphan")
+    comments = relationship("Comment", cascade="all, delete-orphan")
+    attachments = relationship("Attachment", cascade="all, delete-orphan")
 
     @property
     def text(self):
@@ -100,8 +102,11 @@ class Rating(Base):
 class Attachment(Base):
     """ Represents a attachment on a note """
 
+    """ Work in Progress """
+
     __tablename__ = "attachment"
     id = Column("attachment_id", Integer, primary_key=True)
+    address = Column("address", String)
     note_id = Column(Integer, ForeignKey("note.note_id"), index=True)
     owner = Column(Integer, ForeignKey("user.user_id"), index=True)
     data = Column("data", LargeBinary)
@@ -121,10 +126,15 @@ class Comment(Base):
     note_id = Column(Integer, ForeignKey("note.note_id"), index=True)
     owner = Column(Integer, ForeignKey("user.user_id"), index=True)
     body = Column(String)
-    date = Column("date", DateTime, default=datetime.datetime.today)
+    date = Column("date", DateTime, default=datetime.date.today())
+
+    @property
+    def date(self):
+        """ Get a formatted string version of the created date. """
+        return self.date.strftime(DATE_FORMAT)
 
     def __str__(self):
-        return f"{self.body} : {self.date}"
+        return f"{self.body}"
 
     def __repr__(self) -> str:
         return f"Comment (owner={self.owner}, note_id={self.note_id})"
