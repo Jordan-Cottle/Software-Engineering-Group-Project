@@ -18,7 +18,7 @@ class User(Base):
     password = Column("password", String)
     salt = Column("salt", String)
 
-    notes = relationship("Note", order_by="Note.id")
+    notes = relationship("Note", order_by="Note.id", backref="owner")
 
     def __str__(self):
         return f"User {self.name}"
