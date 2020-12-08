@@ -100,9 +100,7 @@ class Rating(Base):
 
 
 class Attachment(Base):
-    """ Represents a attachment on a note """
-
-    """ Work in Progress """
+    """ Represents a attachment on a note: Work in progress"""
 
     __tablename__ = "attachment"
     id = Column("attachment_id", Integer, primary_key=True)
@@ -126,12 +124,12 @@ class Comment(Base):
     note_id = Column(Integer, ForeignKey("note.note_id"), index=True)
     owner = Column(Integer, ForeignKey("user.user_id"), index=True)
     body = Column(String)
-    date = Column("date", DateTime, default=datetime.date.today())
+    date_created = Column("date", DateTime, default=datetime.date.today())
 
     @property
     def date(self):
         """ Get a formatted string version of the created date. """
-        return self.date.strftime(DATE_FORMAT)
+        return self.date_created.strftime(DATE_FORMAT)
 
     def __str__(self):
         return f"{self.body}"
