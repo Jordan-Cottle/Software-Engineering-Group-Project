@@ -18,7 +18,7 @@ def test_create_simple_note(session, user):
     assert note.id == 1, "New note should be the first one"
     assert note.title == title, "New note should have the specified title"
     assert note.text == text, "New note should have the specified text"
-    assert note.owner == user.id, "Notes should be owned by their creators"
+    assert note.owner_id == user.id, "Notes should be owned by their creators"
 
 
 def test_create_multiline_note(session, user):
@@ -30,7 +30,7 @@ def test_create_multiline_note(session, user):
     assert note.id == 1, "New note should be the first one"
     assert note.title == title, "New note should have the specified title"
     assert note.text == text, "New note should have the specified text"
-    assert note.owner == user.id, "Notes should be owned by their creators"
+    assert note.owner_id == user.id, "Notes should be owned by their creators"
 
     assert len(note.sections) == 2, "Each line of a note should be it's own section"
 
@@ -61,9 +61,9 @@ def test_get_notes(session, notes, user):
 
 
 def test_delete_note(session, user, note):
-    before_delete = session.query(Note).filter(Note.owner == user.id).count()
+    before_delete = session.query(Note).filter(Note.owner_id == user.id).count()
     delete_note(session, note.id)
-    after_delete = session.query(Note).filter(Note.owner == user.id).count()
+    after_delete = session.query(Note).filter(Note.owner_id == user.id).count()
 
     assert (
         before_delete > after_delete
@@ -99,9 +99,9 @@ def test_edit_note(session, user, note):
     edtext = "This has \n been edited"
 
     sections_before = len(note.sections)
-    before_edit = session.query(Note).filter(Note.owner == user.id).count()
+    before_edit = session.query(Note).filter(Note.owner_id == user.id).count()
     edit_note(session, edtitle, edtext, note.id, user)
-    after_edit = session.query(Note).filter(Note.owner == user.id).count()
+    after_edit = session.query(Note).filter(Note.owner_id == user.id).count()
     editednote = get_note(session, note.id, user)
     sections_after = len(editednote.sections)
 

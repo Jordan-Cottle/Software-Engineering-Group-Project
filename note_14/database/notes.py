@@ -45,7 +45,7 @@ def get_note(session, note_id, user):  # pylint: disable=unused-argument
 
 def create_note(session, title, text, user):
     """ Create a new note in the database. """
-    note = Note(title=title, created=date.today(), owner=user.id)
+    note = Note(title=title, created=date.today(), owner_id=user.id)
     session.add(note)
 
     for i, line in enumerate(text.split("\n")):

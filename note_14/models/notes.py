@@ -24,14 +24,17 @@ class Note(Base):
     title = Column(String)
     created = Column(Date)
     views = Column(Integer)
-    owner = Column(Integer, ForeignKey("user.user_id"))
+    owner_id = Column(Integer, ForeignKey("user.user_id"))
     sections = relationship(
-        "NoteSection", order_by="NoteSection.index", cascade="all, delete-orphan"
+        "NoteSection",
+        order_by="NoteSection.index",
+        cascade="all, delete-orphan",
+        backref="note",
     )
-    ratings = relationship("Rating", cascade="all, delete-orphan", backref="owner")
-    comments = relationship("Comment", cascade="all, delete-orphan", backref="owner")
+    ratings = relationship("Rating", cascade="all, delete-orphan", backref="note")
+    comments = relationship("Comment", cascade="all, delete-orphan", backref="note")
     attachments = relationship(
-        "Attachment", cascade="all, delete-orphan", backref="owner"
+        "Attachment", cascade="all, delete-orphan", backref="note"
     )
 
     @property
@@ -96,7 +99,7 @@ class Rating(Base):
         return f"{self.value}"
 
     def __repr__(self) -> str:
-        return f"Rating (owner={self.owner_id}, note_id={self.note_id}, value={self.value})"
+        return f"Rating (owner_id={self.owner_id}, note_id={self.note_id}, value={self.value})"
 
 
 class Attachment(Base):
