@@ -45,4 +45,4 @@ echo $note_14 >> $include
 
 # Generate secret key for use by the application to manage sessions
 secret_key="SECRET_KEY = $(python -c 'import os; print(os.urandom(16))')"
-echo $secret_key > note_14/server/secrets.py
+echo $secret_key > note_14/config/secrets.py

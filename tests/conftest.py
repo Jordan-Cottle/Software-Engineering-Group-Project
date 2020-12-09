@@ -1,12 +1,16 @@
-from unittest.mock import patch
-
 import pytest
-from models import Base
-from server import app
-from sqlalchemy import create_engine
-from sqlalchemy.orm import sessionmaker
 
-from database import create_note, create_user
+import config
+
+config.DB_FILENAME = f":memory:"
+
+# Set up models in the in-memory db
+from models import Base
+from database import Session, ENGINE
+
+from server import app
+
+from database import create_note, create_user, get_user
 
 
 @pytest.fixture(name="client")
@@ -16,24 +20,20 @@ def client_fixture():
         yield client
 
 
-@pytest.fixture(name="database")
-def test_engine():
-    engine = create_engine(f"sqlite:///:memory:")
-    Base.metadata.create_all(engine)
+@pytest.fixture(name="models", autouse=True)
+def create_database_models():
+    """ This ensures that every test has a clean database. """
+    Base.metadata.create_all(ENGINE)
 
-    return engine
+    yield None
+
+    Base.metadata.drop_all(ENGINE)
 
 
-@pytest.fixture(name="session", autouse=True)
-def database_session(database):
-    Session = sessionmaker(bind=database)
+@pytest.fixture(name="session")
+def database_session():
     session = Session()
-
-    with app.app_context():
-        with patch("server.controller.g") as g_mock:
-            g_mock.session = Session()
-            yield session
-
+    yield session
     session.close()
 
 

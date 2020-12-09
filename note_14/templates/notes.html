@@ -1,10 +1,31 @@
 {% extends "core.html" %}
 {% block body %}
+<table>
+    <thead>
+        <tr>
+            <th colspan="2">Notes</th>
+        </tr>
+        <tr>
 
-<h1>List of available notes</h1>
-<ul>
-    {% for note in notes %}
-    <li><a href="/notes/{{ note.id }}">{{ note.title }}</a></li>
-    {% endfor %}
-</ul>
+            {% if sort_by == "title" %}
+            {% set reverse = not reverse %}
+            {% endif %}
+
+            <th><a href="{{ url_for('list_notes', sort_by='title', reverse=reverse) }}">Title</a></th>
+
+            {% if sort_by == "owner" %}
+            {% set reverse = not reverse %}
+            {% endif %}
+            <th><a href="{{ url_for('list_notes', sort_by='owner', reverse=reverse) }}">Owner</a></th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for note in notes %}
+        <tr>
+            <td><a href=" /notes/{{ note.id }}">{{ note.title }}</a></td>
+            <td>{{ note.owner.name }}</td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
 {% endblock body %}

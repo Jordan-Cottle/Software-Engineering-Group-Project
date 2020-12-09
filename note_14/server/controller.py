@@ -21,7 +21,18 @@ def main_page():
 @login_required
 def list_notes():
     """ Render the notes list page. """
-    return render_template("notes.html", notes=get_notes(g.session, current_user))
+
+    sort_by = request.args.get("sort", default="title")
+    reverse = request.args.get("reverse", default="False") == "True"
+
+    notes = get_notes(g.session, current_user)
+
+    if sort_by == "owner":
+        notes = sorted(notes, key=lambda note: note.owner.name, reverse=reverse)
+    else:
+        notes = sorted(notes, key=lambda note: getattr(note, sort_by), reverse=reverse)
+
+    return render_template("notes.html", notes=notes, sort_by=sort_by, reverse=reverse)
 
 
 @app.route("/notes/<note_id>")
@@ -44,7 +55,7 @@ def user_login():
         password = form["password"]
 
         # Login and validate the user.
-        login(g.session, user_name, password)
+        login(user_name, password)
 
         return redirect(url_for("main_page"))
 
@@ -65,7 +76,7 @@ def create_account():
         create_user(g.session, user_name, password)
         g.session.commit()
 
-        login(g.session, user_name, password)
+        login(user_name, password)
 
         return redirect(url_for("main_page"))
 
