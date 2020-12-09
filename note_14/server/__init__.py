@@ -10,7 +10,7 @@ from flask import Flask
 from flask_login import LoginManager
 
 from database import inject_session, close_session
-from .secrets import SECRET_KEY
+from config import SECRET_KEY
 
 server_dir = os.path.dirname(__file__)
 statics = os.path.join(os.path.split(server_dir)[0], "static")
