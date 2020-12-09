@@ -7,10 +7,9 @@ NoteSection -- Represents a single section of a note.
 
 Rating -- Represents the rating of a single note
 """
-
-from sqlalchemy import Column, Integer, String, Date, ForeignKey
+import datetime
+from sqlalchemy import Column, Integer, String, Date, ForeignKey, DateTime
 from sqlalchemy.orm import relationship
-
 from models import Base
 
 
@@ -26,8 +25,14 @@ class Note(Base):
     created = Column(Date)
     views = Column(Integer)
     owner = Column(Integer, ForeignKey("user.user_id"))
-    sections = relationship("NoteSection", order_by="NoteSection.index")
-    ratings = relationship("Rating")
+    sections = relationship(
+        "NoteSection", order_by="NoteSection.index", cascade="all, delete-orphan"
+    )
+    ratings = relationship("Rating", cascade="all, delete-orphan", backref="owner")
+    comments = relationship("Comment", cascade="all, delete-orphan", backref="owner")
+    attachments = relationship(
+        "Attachment", cascade="all, delete-orphan", backref="owner"
+    )
 
     @property
     def text(self):
@@ -83,7 +88,7 @@ class Rating(Base):
     """ Represents a rating of a note """
 
     __tablename__ = "rating"
-    owner = Column(Integer, ForeignKey("user.user_id"), index=True, primary_key=True)
+    owner_id = Column(Integer, ForeignKey("user.user_id"), index=True, primary_key=True)
     note_id = Column(Integer, ForeignKey("note.note_id"), index=True, primary_key=True)
     value = Column("value", Integer)
 
@@ -91,6 +96,49 @@ class Rating(Base):
         return f"{self.value}"
 
     def __repr__(self) -> str:
+        return f"Rating (owner={self.owner_id}, note_id={self.note_id}, value={self.value})"
+
+
+class Attachment(Base):
+    """ Represents a attachment on a note: Work in progress"""
+
+    __tablename__ = "attachment"
+    id = Column("attachment_id", Integer, primary_key=True)
+    file_name = Column(String)
+    display_name = Column(String)
+    note_id = Column(Integer, ForeignKey("note.note_id"), index=True)
+    owner_id = Column(Integer, ForeignKey("user.user_id"), index=True)
+
+    def __str__(self):
+        return f"{self.display_name}: {self.file_name}"
+
+    def __repr__(self) -> str:
         return (
-            f"Rating (owner={self.owner}, note_id={self.note_id}, value={self.value})"
+            "Attachment("
+            f"owner_id={self.id}, "
+            f"note_id={self.note_id}, "
+            f"display_name='{self.display_name}', "
+            f"file_name={self.file_name})"
         )
+
+
+class Comment(Base):
+    """ Represents a comment on a note """
+
+    __tablename__ = "comment"
+    id = Column("comment_id", Integer, primary_key=True)
+    note_id = Column(Integer, ForeignKey("note.note_id"), index=True)
+    owner_id = Column(Integer, ForeignKey("user.user_id"), index=True)
+    body = Column(String)
+    date_created = Column("date", DateTime, default=datetime.date.today())
+
+    @property
+    def date(self):
+        """ Get a formatted string version of the created date. """
+        return self.date_created.strftime(DATE_FORMAT)
+
+    def __str__(self):
+        return f"{self.body}"
+
+    def __repr__(self) -> str:
+        return f"Comment (owner={self.owner_id}, note_id={self.note_id})"
