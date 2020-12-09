@@ -23,11 +23,14 @@ def list_notes():
     """ Render the notes list page. """
 
     sort_by = request.args.get("sort", default="title")
-    reverse = request.args.get("reverse", default=False, type=bool)
+    reverse = request.args.get("reverse", default="False") == "True"
 
     notes = get_notes(g.session, current_user)
 
-    notes = sorted(notes, key=lambda note: getattr(note, sort_by), reverse=reverse)
+    if sort_by == "owner":
+        notes = sorted(notes, key=lambda note: note.owner.name, reverse=reverse)
+    else:
+        notes = sorted(notes, key=lambda note: getattr(note, sort_by), reverse=reverse)
 
     return render_template("notes.html", notes=notes, sort_by=sort_by, reverse=reverse)
 
