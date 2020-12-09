@@ -2,15 +2,12 @@
 
 from hashlib import sha256
 
-from database import get_user
-
+from flask import g
 from flask_login import login_user
 
-from server import login_manager
-
-from sqlalchemy.orm.exc import DetachedInstanceError
-
+from database import get_user
 from models import User as UserModel
+from server import login_manager
 
 
 class InvalidPassword(Exception):
@@ -20,14 +17,17 @@ class InvalidPassword(Exception):
 class User:
     """ Application level user class for managing authentication and authorization. """
 
-    def __init__(self, session, user_name) -> None:
+    def __init__(self, user_name) -> None:
 
-        # Get database instance of this user
-        self.user = get_user(session, user_name)
-        self.session = session
+        self.user_name = user_name
 
         # User is not considered logged in by default
         self.authenticated = False
+
+    @property
+    def user(self):
+        """ Get the user from the database. """
+        return get_user(g.session, self.user_name)
 
     @classmethod
     def get(cls, session, user_id):
@@ -35,16 +35,12 @@ class User:
 
         user = session.query(UserModel).filter_by(id=user_id).one()
 
-        return cls(session, user.name)
+        return cls(user.name)
 
     def __getattr__(self, name):
         """ Delegate any access to attributes not defined here to the underlying database model. """
 
-        try:
-            return getattr(self.user, name)
-        except DetachedInstanceError:
-            self.user = self.session.merge(self.user)
-            return getattr(self.user, name)
+        return getattr(self.user, name)
 
     def login(self, password):
         """Process login operation.
@@ -109,10 +105,10 @@ def load_user(user_id):
         return None
 
 
-def login(session, user_name, password):
+def login(user_name, password):
     """ Use user_name and password to authenticate the user. """
 
-    user = User(session, user_name)
+    user = User(user_name)
 
     user.login(password)
 
