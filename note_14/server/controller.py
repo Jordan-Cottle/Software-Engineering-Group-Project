@@ -3,7 +3,7 @@
 Flask routes should be defined here.
 """
 
-from database import create_user, get_note, get_notes
+from database import create_user, get_note, get_notes, create_note
 from flask import g, redirect, render_template, request
 from flask.helpers import url_for
 from flask_login import current_user, login_required
@@ -81,3 +81,21 @@ def create_account():
         return redirect(url_for("main_page"))
 
     return render_template("register.html")
+
+
+@app.route("/notes/create", methods=["GET", "POST"])
+@login_required
+def create_new_note():
+    """ Render create note page and create notes """
+
+    if request.method == "POST":
+        form = request.form
+
+        title = form["title"]
+        text = form["text"]
+        user = current_user
+        create_note(g.session, title, text, user)
+
+        return redirect(url_for("list_notes"))
+
+    return render_template("create_note.html")
