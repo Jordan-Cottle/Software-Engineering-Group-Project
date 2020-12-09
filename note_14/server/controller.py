@@ -3,7 +3,7 @@
 Flask routes should be defined here.
 """
 
-from database import create_user, get_note, get_notes, create_note
+from database import create_user, get_note, get_notes, create_note, delete_note
 from flask import g, redirect, render_template, request
 from flask.helpers import url_for
 from flask_login import current_user, login_required
@@ -99,3 +99,12 @@ def create_new_note():
         return redirect(url_for("list_notes"))
 
     return render_template("create_note.html")
+
+
+@app.route("/notes/<note_id>/delete", methods=["POST"])
+@login_required
+def note_delete(note_id):
+    """ Delete notes """
+    delete_note(g.session, note_id)
+
+    return redirect(url_for("get_notes"))
