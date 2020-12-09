@@ -1,0 +1,13 @@
+{% extends "core.html" %}
+
+{% block body %}
+
+<form action="{{ url_for('create_new_note') }}" method="post">
+    <p><label>Title </label></p>
+    <p> <input type="text" name="title" placeholder="Title" /></p>
+    <p><label>Text</label></p>
+    <p> <input type="password" name="text" placeholder="Enter Text Here" /></p>
+    <p><input type="submit" value="Create Note" /></p>
+</form>
+
+{% endblock body %}
