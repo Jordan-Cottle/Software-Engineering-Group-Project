@@ -112,7 +112,7 @@ def create_new_note():
 @login_required
 def note_delete(note_id):
     """ Delete notes """
-    delete_note(g.session, note_id)
+    delete_note(g.session, note_id, current_user)
 
     return redirect(url_for("list_notes"))
 
