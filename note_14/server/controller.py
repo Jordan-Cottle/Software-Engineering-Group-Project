@@ -42,13 +42,11 @@ def list_notes():
     return render_template("notes.html", notes=notes, sort_by=sort_by, reverse=reverse)
 
 
-@app.route("/notes/<note_id>")
+@app.route("/notes/<int:note_id>")
 @login_required
 def view_note(note_id):
     """ Render individual note page. """
-    return render_template(
-        "note.html", note=get_note(g.session, int(note_id), current_user)
-    )
+    return render_template("note.html", note=get_note(g.session, note_id, current_user))
 
 
 @app.route("/login", methods=["GET", "POST"])
@@ -108,7 +106,7 @@ def create_new_note():
     return render_template("create_note.html")
 
 
-@app.route("/notes/<note_id>/delete", methods=["POST"])
+@app.route("/notes/<int:note_id>/delete", methods=["POST"])
 @login_required
 def note_delete(note_id):
     """ Delete notes """
@@ -117,7 +115,7 @@ def note_delete(note_id):
     return redirect(url_for("list_notes"))
 
 
-@app.route("/notes/<note_id>/edit", methods=["GET", "POST"])
+@app.route("/notes/<int:note_id>/edit", methods=["GET", "POST"])
 @login_required
 def note_edit(note_id):
     """ Edit note view controller """
