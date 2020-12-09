@@ -2,12 +2,12 @@
 
 {% block body %}
 
-<form action="{{ url_for('note_edit', note_id=note_id) }}" method="post">
+<form action="{{ url_for('note_edit', note_id=note.id) }}" method="post">
     <p><label>Title </label></p>
     <p><input type="text" name="title" value="{{ note.title }}" /></p>
 
     <p><label>Text </label></p>
-    <p><textarea rows="12" cols="80" name="note_text" value="{{ note.text }}" /></p>
+    <p><textarea rows="12" cols="80" name="note_text">{{ note.text }}</textarea></p>
 
     <p><input type="submit" value="Edit" /></p>
 </form>
