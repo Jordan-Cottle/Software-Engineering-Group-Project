@@ -6,9 +6,7 @@
 <h2>{{ note.date }}</h2>
 <p>{{ note.text }}</p>
 
-<form action="{{ url_for('note_edit', note_id=note.id) }}" method="post">
-    <input type="submit" value="Edit">
-</form>
+<a href="{{ url_for('note_edit', note_id=note.id) }}">Edit</a>
 
 <form action="{{ url_for('note_delete', note_id=note.id) }}" method="post">
     <input type="submit" value="Delete">
