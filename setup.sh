@@ -30,7 +30,6 @@ note_14="${home_dir}/note_14"
 
 source $activate
 
-pip install --upgrade pip
 pip install -r requirements.txt
 
 echo $home_dir > $include
