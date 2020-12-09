@@ -1,10 +1,22 @@
 {% extends "core.html" %}
 {% block body %}
-
-<h1>List of available notes</h1>
-<ul>
-    {% for note in notes %}
-    <li><a href="/notes/{{ note.id }}">{{ note.title }}</a></li>
-    {% endfor %}
-</ul>
+<table>
+    <thead>
+        <tr>
+            <th colspan="2">Notes</th>
+        </tr>
+        <tr>
+            <th>Title</td>
+            <th>Owner</td>
+        </tr>
+    </thead>
+    <tbody>
+        {% for note in notes %}
+        <tr>
+            <td><a href="/notes/{{ note.id }}">{{ note.title }}</a></td>
+            <td>{{ note.owner.name }}</td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
 {% endblock body %}
