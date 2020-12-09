@@ -62,7 +62,7 @@ def test_get_notes(session, notes, user):
 
 def test_delete_note(session, user, note):
     before_delete = session.query(Note).filter(Note.owner_id == user.id).count()
-    delete_note(session, note.id)
+    delete_note(session, note.id, user)
     after_delete = session.query(Note).filter(Note.owner_id == user.id).count()
 
     assert (
