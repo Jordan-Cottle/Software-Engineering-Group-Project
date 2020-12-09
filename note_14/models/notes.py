@@ -104,7 +104,8 @@ class Attachment(Base):
 
     __tablename__ = "attachment"
     id = Column("attachment_id", Integer, primary_key=True)
-    address = Column("address", String)
+    file_name = Column(String)
+    display_name = Column(String)
     note_id = Column(Integer, ForeignKey("note.note_id"), index=True)
     owner = Column(Integer, ForeignKey("user.user_id"), index=True)
     data = Column("data", LargeBinary)
