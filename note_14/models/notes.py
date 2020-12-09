@@ -8,7 +8,7 @@ NoteSection -- Represents a single section of a note.
 Rating -- Represents the rating of a single note
 """
 import datetime
-from sqlalchemy import Column, Integer, String, Date, ForeignKey, LargeBinary, DateTime
+from sqlalchemy import Column, Integer, String, Date, ForeignKey, DateTime
 from sqlalchemy.orm import relationship
 from models import Base
 
