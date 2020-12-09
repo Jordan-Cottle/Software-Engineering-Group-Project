@@ -109,8 +109,11 @@ class Attachment(Base):
     note_id = Column(Integer, ForeignKey("note.note_id"), index=True)
     owner_id = Column(Integer, ForeignKey("user.user_id"), index=True)
 
+    def __str__(self):
+        return f"{self.display_name}"
+
     def __repr__(self) -> str:
-        return f"Attachment (owner={self.owner_id}, note_id={self.note_id})"
+        return f"Attachment (owner_id={self.owner_id}, note_id={self.note_id}, display_name={self.display_name}, file_name={self.file_name})"
 
 
 class Comment(Base):
