@@ -114,7 +114,7 @@ def note_delete(note_id):
     """ Delete notes """
     delete_note(g.session, note_id)
 
-    return redirect(url_for("get_notes"))
+    return redirect(url_for("list_notes"))
 
 
 @app.route("/notes/<note_id>/edit", methods=["GET", "POST"])
@@ -130,4 +130,4 @@ def note_edit(note_id):
     text = request.form["note_text"]
     edit_note(g.session, title, text, note_id, current_user)
 
-    return redirect(url_for("get_note", note_id=note_id))
+    return redirect(url_for("view_note", note_id=note_id))
