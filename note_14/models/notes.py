@@ -108,10 +108,6 @@ class Attachment(Base):
     display_name = Column(String)
     note_id = Column(Integer, ForeignKey("note.note_id"), index=True)
     owner_id = Column(Integer, ForeignKey("user.user_id"), index=True)
-    data = Column("data", LargeBinary)
-
-    def __str__(self):
-        return f"{self.data}"
 
     def __repr__(self) -> str:
         return f"Attachment (owner={self.owner_id}, note_id={self.note_id})"
