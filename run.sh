@@ -1,10 +1,10 @@
-ls .venv/bin 2>/dev/null
-
-if [[ $? -eq 2 ]]
-then  # Windows
-    source .venv/Scripts/activate
-else  # Not windows
+if [[ -d .venv/bin ]]; then
     source .venv/bin/activate
+elif [[ -d .venv/Scripts ]]; then
+    source .venv/Scripts/activate
+else
+    echo "ERROR: Unable to find virtual environment, please run setup.sh to setup the environment";
+    exit 1
 fi
 
 pushd note_14
