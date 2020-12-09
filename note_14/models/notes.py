@@ -28,9 +28,11 @@ class Note(Base):
     sections = relationship(
         "NoteSection", order_by="NoteSection.index", cascade="all, delete-orphan"
     )
-    ratings = relationship("Rating", cascade="all, delete-orphan")
-    comments = relationship("Comment", cascade="all, delete-orphan")
-    attachments = relationship("Attachment", cascade="all, delete-orphan")
+    ratings = relationship("Rating", cascade="all, delete-orphan", backref="owner")
+    comments = relationship("Comment", cascade="all, delete-orphan", backref="owner")
+    attachments = relationship(
+        "Attachment", cascade="all, delete-orphan", backref="owner"
+    )
 
     @property
     def text(self):
@@ -86,7 +88,7 @@ class Rating(Base):
     """ Represents a rating of a note """
 
     __tablename__ = "rating"
-    owner = Column(Integer, ForeignKey("user.user_id"), index=True, primary_key=True)
+    owner_id = Column(Integer, ForeignKey("user.user_id"), index=True, primary_key=True)
     note_id = Column(Integer, ForeignKey("note.note_id"), index=True, primary_key=True)
     value = Column("value", Integer)
 
@@ -94,9 +96,7 @@ class Rating(Base):
         return f"{self.value}"
 
     def __repr__(self) -> str:
-        return (
-            f"Rating (owner={self.owner}, note_id={self.note_id}, value={self.value})"
-        )
+        return f"Rating (owner={self.owner_id}, note_id={self.note_id}, value={self.value})"
 
 
 class Attachment(Base):
@@ -107,14 +107,14 @@ class Attachment(Base):
     file_name = Column(String)
     display_name = Column(String)
     note_id = Column(Integer, ForeignKey("note.note_id"), index=True)
-    owner = Column(Integer, ForeignKey("user.user_id"), index=True)
+    owner_id = Column(Integer, ForeignKey("user.user_id"), index=True)
     data = Column("data", LargeBinary)
 
     def __str__(self):
         return f"{self.data}"
 
     def __repr__(self) -> str:
-        return f"Attachment (owner={self.owner}, note_id={self.note_id})"
+        return f"Attachment (owner={self.owner_id}, note_id={self.note_id})"
 
 
 class Comment(Base):
@@ -123,7 +123,7 @@ class Comment(Base):
     __tablename__ = "comment"
     id = Column("comment_id", Integer, primary_key=True)
     note_id = Column(Integer, ForeignKey("note.note_id"), index=True)
-    owner = Column(Integer, ForeignKey("user.user_id"), index=True)
+    owner_id = Column(Integer, ForeignKey("user.user_id"), index=True)
     body = Column(String)
     date_created = Column("date", DateTime, default=datetime.date.today())
 
@@ -136,4 +136,4 @@ class Comment(Base):
         return f"{self.body}"
 
     def __repr__(self) -> str:
-        return f"Comment (owner={self.owner}, note_id={self.note_id})"
+        return f"Comment (owner={self.owner_id}, note_id={self.note_id})"
