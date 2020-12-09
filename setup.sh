@@ -32,6 +32,14 @@ source $activate
 
 pip install -r requirements.txt
 
+while getopts "d" opt; do
+  case ${opt} in
+    d ) # install def requirements
+        pip install -r requirements.dev.txt
+      ;;
+  esac
+done
+
 echo $home_dir > $include
 echo $note_14 >> $include
 
