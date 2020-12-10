@@ -36,6 +36,9 @@ class Note(Base):
     attachments = relationship(
         "Attachment", cascade="all, delete-orphan", backref="note"
     )
+    permissions = relationship(
+        "NotePermission", backref="note", cascade="all, delete-orphan"
+    )
 
     @property
     def text(self):
