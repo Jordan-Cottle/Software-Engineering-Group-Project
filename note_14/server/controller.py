@@ -10,6 +10,7 @@ from database import (
     create_note,
     delete_note,
     edit_note,
+    UnauthorizedError,
 )
 from flask import g, redirect, render_template, request
 from flask.helpers import url_for
@@ -131,3 +132,16 @@ def note_edit(note_id):
     edit_note(g.session, title, text, note_id, current_user)
 
     return redirect(url_for("view_note", note_id=note_id))
+
+
+@app.route("/not_found")
+def unauthorized():
+    """ Display a generic 404 page for unauthorized requests. """
+    return render_template("unauthorized.html")
+
+
+@app.errorhandler(UnauthorizedError)
+def unauthorized_redirect(error):
+    """ Send user to the unauthorized page. """
+    print(f"UNAUTHORIZED: {error}")
+    return redirect(url_for("unauthorized"))
