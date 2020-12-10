@@ -1,16 +1,23 @@
 """ Module for managing user authentication. """
 
+from http import HTTPStatus
 from hashlib import sha256
 
-from flask import g
+from flask import g, redirect, url_for
 from flask_login import login_user
 
-from database import get_user
+from database import get_user, UserNotFound
 from models import User as UserModel
-from server import login_manager
+from server import login_manager, app
 
 
-class InvalidPassword(Exception):
+class LoginError(Exception):
+    """ A problem was encountered attempting to login. """
+
+    status = HTTPStatus.UNAUTHORIZED
+
+
+class InvalidPassword(LoginError):
     """ Indicates an invalid password was used to attempt a login. """
 
 
@@ -90,6 +97,9 @@ class User:
 
         return self.user.id
 
+    def __str__(self) -> str:
+        return self.user_name
+
 
 # Global dict for keeping track of users seen by the server
 USERS = {}
@@ -110,7 +120,10 @@ def login(user_name, password):
 
     user = User(user_name)
 
-    user.login(password)
+    try:
+        user.login(password)
+    except UserNotFound as error:
+        raise LoginError(f"Unable to locate {user} to login") from error
 
     USERS[user.id] = user
 
@@ -118,3 +131,10 @@ def login(user_name, password):
     login_user(user)
 
     return user
+
+
+@app.errorhandler(LoginError)
+def send_to_login(error):
+    """ Send user to login page. """
+
+    return redirect(url_for("user_login", error=int(error.status)))
