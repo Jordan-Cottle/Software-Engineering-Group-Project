@@ -64,7 +64,9 @@ def user_login():
 
         return redirect(url_for("main_page"))
 
-    return render_template("login.html")
+    error = request.args.get("error")
+
+    return render_template("login.html", error=error)
 
 
 @app.route("/register", methods=["GET", "POST"])
