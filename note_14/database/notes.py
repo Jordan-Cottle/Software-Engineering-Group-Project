@@ -16,7 +16,7 @@ from werkzeug.utils import secure_filename
 
 from config import PermissionType
 from models import Attachment, Note, NotePermission, NoteSection
-from database import UnauthorizedError, add_permission, has_permission
+from database import UnauthorizedError, add_permission, check_permission
 
 
 def get_notes(session, user):  # pylint: disable=unused-argument
@@ -72,8 +72,7 @@ def delete_note(session, note_id, user):
     """ Delete a note from the database """
     note = get_note(session, note_id, user)
 
-    if not has_permission(session, PermissionType.EDIT, user, note):
-        raise UnauthorizedError(f"{user} not authorized to delete {note}")
+    check_permission(session, PermissionType.EDIT, user, note)
 
     session.delete(note)
 
@@ -82,8 +81,7 @@ def edit_note(session, title, text, note_id, user):
     """ edit an existing note in the database. """
     note = get_note(session, note_id, user)
 
-    if not has_permission(session, PermissionType.EDIT, user, note):
-        raise UnauthorizedError(f"{user} not authorized to delete {note}")
+    check_permission(session, PermissionType.EDIT, user, note)
 
     note.title = title
     note.text = text
@@ -97,6 +95,8 @@ def add_attachment(session, attachment, note, user):
     attachment -- A file retrieved from a flask request
         - See https://flask.palletsprojects.com/en/1.1.x/patterns/fileuploads/
     """
+
+    check_permission(session, PermissionType.EDIT, user, note)
 
     # set file name
     name, ext = os.path.splitext(attachment.filename)
