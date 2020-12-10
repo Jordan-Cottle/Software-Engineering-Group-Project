@@ -67,6 +67,9 @@ class Note(Base):
         """ Computes the average of ratings for a single note """
         return sum(rating.value for rating in self.ratings) / len(self.ratings)
 
+    def __str__(self):
+        return str(self.title)
+
 
 class NoteSection(Base):
     """ Represents a section within a Note. """
