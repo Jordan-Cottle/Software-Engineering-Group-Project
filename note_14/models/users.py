@@ -26,6 +26,10 @@ class User(Base):
         "Attachment", backref="owner", cascade="all, delete-orphan"
     )
 
+    permissions = relationship(
+        "NotePermission", backref="user", cascade="all, delete-orphan"
+    )
+
     def __str__(self):
         return f"User {self.name}"
 
