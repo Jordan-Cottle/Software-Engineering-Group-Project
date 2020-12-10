@@ -62,3 +62,11 @@ def has_permission(session, permission_type: PermissionType, user, note) -> bool
         .count()
         == 1
     )
+
+
+def check_permission(session, permission_type: PermissionType, user, note):
+    """ Validate that a user has the requested permission. """
+    if not has_permission(session, permission_type, user, note):
+        raise UnauthorizedError(
+            f"{user} not authorized for {permission_type} on {note}"
+        )
