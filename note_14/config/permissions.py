@@ -11,8 +11,11 @@ class PermissionType(str, Enum):
     EDIT -- Allow making edits to a note, including adding attachments and deleting
 
     COMMENT -- Allow a user to make comments on a note
+
+    ADMIN -- Allow user to edit permissions on a note
     """
 
     READ = "read"
     EDIT = "edit"
     COMMENT = "comment"
+    ADMIN = "admin"
