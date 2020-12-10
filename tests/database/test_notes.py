@@ -1,3 +1,6 @@
+import os
+from unittest.mock import MagicMock
+
 from database import (
     get_note,
     get_notes,
@@ -5,8 +8,9 @@ from database import (
     delete_note,
     create_rating,
     edit_note,
+    add_attachment,
 )
-from models import Note
+from models import Note, Attachment
 
 
 def test_create_simple_note(session, user):
@@ -112,3 +116,34 @@ def test_edit_note(session, user, note):
     assert editednote.text == edtext, "Editing note should change the text"
     assert sections_before == 2
     assert sections_after == 2
+
+
+def test_add_attachment(session, user, note):
+    """ Test uploading an attachment. """
+
+    display_name = "test_file.txt"
+    name, ext = os.path.splitext(display_name)
+    file_name = f"{user.name}_{name}_1.{ext}"
+
+    attachment = MagicMock(filename=display_name)
+
+    model = add_attachment(session, attachment, note, user)
+    session.commit()
+
+    attachment.save.assert_called_once()
+    attachment.save.assert_called_with(file_name)
+
+    assert (
+        model.display_name == display_name
+    ), f"Attachment should have the name the user provided: got {model.display_name}, expected {display_name}"
+    assert (
+        model.file_name == file_name
+    ), f"Attachments should be given a predictable, unique filename: got {model.file_name}, expected {file_name}"
+
+    attachment = session.query(Attachment).one()
+    assert (
+        attachment.owner == user
+    ), "The new attachment should belong to the uploading user"
+    assert (
+        attachment.note == note
+    ), "The new attachment should be associated with the note"

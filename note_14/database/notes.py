@@ -8,12 +8,14 @@ get_note: Get a single note from the database
 get_notes: Get all the notes from the database that a user can view
 """
 
+import os
 from datetime import date
 
 from sqlalchemy.orm.exc import NoResultFound
+from werkzeug.utils import secure_filename
 
 from config import PermissionType
-from models import Note, NotePermission, NoteSection
+from models import Attachment, Note, NotePermission, NoteSection
 from database import UnauthorizedError, add_permission, has_permission
 
 
@@ -85,3 +87,40 @@ def edit_note(session, title, text, note_id, user):
 
     note.title = title
     note.text = text
+
+
+def add_attachment(session, attachment, note, user):
+    """Save and track attachment in the database.
+
+    Parameters
+
+    attachment -- A file retrieved from a flask request
+        - See https://flask.palletsprojects.com/en/1.1.x/patterns/fileuploads/
+    """
+
+    # set file name
+    name, ext = os.path.splitext(attachment.filename)
+
+    # determine filename
+    num = 1
+    file_name = secure_filename(f"{user.name}_{name}_{num}.{ext}")
+    while os.path.isfile(file_name):
+        num += 1
+        file_name = secure_filename(f"{user.name}_{name}_{num}.{ext}")
+
+    # create model to track attachment
+    attachment_model = Attachment(
+        display_name=attachment.filename,
+        file_name=file_name,
+        note_id=note.id,
+        owner_id=user.id,
+    )
+    session.add(attachment_model)
+
+    # Flush to db to make sure everything is good
+    session.flush()
+
+    # finally save file to disk
+    attachment.save(file_name)
+
+    return attachment_model
