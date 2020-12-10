@@ -12,6 +12,10 @@ from config import PermissionType
 from models import NotePermission
 
 
+class UnauthorizedError(Exception):
+    """Raised when a user attempts an action they are not authorized for."""
+
+
 def add_permission(session, permission_type: PermissionType, user, note):
     """Add permission to user for note.
 
