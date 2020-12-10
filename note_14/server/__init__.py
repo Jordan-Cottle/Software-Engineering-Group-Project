@@ -21,6 +21,7 @@ app = Flask("note_14", static_folder=statics, template_folder=templates)
 app.secret_key = SECRET_KEY
 
 login_manager = LoginManager(app)
+login_manager.login_view = "user_login"
 
 app.before_request(inject_session)
 app.after_request(close_session)
