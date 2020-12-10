@@ -10,7 +10,7 @@ from flask import Flask
 from flask_login import LoginManager
 
 from database import inject_session, close_session
-from config import SECRET_KEY
+from config import SECRET_KEY, UPLOAD_FOLDER
 
 server_dir = os.path.dirname(__file__)
 statics = os.path.join(os.path.split(server_dir)[0], "static")
@@ -19,6 +19,7 @@ templates = os.path.join(os.path.split(server_dir)[0], "templates")
 app = Flask("note_14", static_folder=statics, template_folder=templates)
 
 app.secret_key = SECRET_KEY
+app.config["UPLOAD_FOLDER"] = UPLOAD_FOLDER
 
 login_manager = LoginManager(app)
 login_manager.login_view = "user_login"
