@@ -2,18 +2,18 @@
 import re
 
 import pytest
-from pytest_bdd import given, when, then
+from pytest_bdd import given, then, when
 from pytest_bdd.parsers import parse
 
-
-from database import create_user, create_note, get_user
-from models import User, Note
+from config import PermissionType
+from database import add_permission, create_note, create_user, get_user
+from models import Note
 
 TEST_PASSWORD = "123456789"
 
 
 def find_note(session, note_title):
-    """ Get the id of a note based on it's title. """
+    """ Get a note based on it's title. """
 
     notes = session.query(Note).all()
 
@@ -83,6 +83,31 @@ def note_exists(session, note_title, user_name):
     session.commit()
 
     return note
+
+
+PERMISSIONS = {
+    "read": PermissionType.READ,
+    "edit": PermissionType.EDIT,
+    "comment": PermissionType.COMMENT,
+    "admin": PermissionType.ADMIN,
+}
+
+
+@given(
+    parse(
+        '"{user_name}" has been granted "{permission_type}" permission for "{note_title}"'
+    )
+)
+def grant_access(session, user_name, permission_type, note_title):
+    """ Set up a permission for a user. """
+
+    user = get_user(session, user_name)
+    note = find_note(session, note_title)
+
+    print(f'Adding "{permission_type}" permission for "{user_name}" on "{note_title}"')
+    add_permission(session, PERMISSIONS[permission_type], user, note)
+
+    session.commit()
 
 
 @when(parse('I navigate to "{route}"'))
