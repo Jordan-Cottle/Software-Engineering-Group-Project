@@ -1,6 +1,7 @@
 import os
 from unittest.mock import MagicMock
 
+from config import PermissionType
 from database import (
     get_note,
     get_notes,
@@ -9,6 +10,7 @@ from database import (
     create_rating,
     edit_note,
     add_attachment,
+    add_permission,
 )
 from models import Note, Attachment
 
@@ -89,10 +91,15 @@ def test_create_rating(session, user, note):
 
 def test_average_ratings(session, user, other_user, note):
 
-    rating1 = create_rating(session, user, note, 1)
+    create_rating(session, user, note, 1)
+    session.commit()
 
-    rating2 = create_rating(session, other_user, note, 3)
+    add_permission(
+        session, PermissionType.READ, other_user, note, triggered_by=note.owner
+    )
+    session.commit()
 
+    create_rating(session, other_user, note, 3)
     session.commit()
 
     assert note.rating == 2, "The note's rating should match 2"
