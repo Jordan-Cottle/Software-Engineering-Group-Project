@@ -10,7 +10,10 @@ get_notes: Get all the notes from the database that a user can view
 
 from datetime import date
 
+from config import PermissionType
 from models import Note, NoteSection
+
+from database import add_permission
 
 
 class UnauthorizedError(Exception):
@@ -50,6 +53,13 @@ def create_note(session, title, text, user):
 
     for i, line in enumerate(text.split("\n")):
         note.sections.append(NoteSection(content=line, index=i))
+
+    # Flush to get id for note to assign permissions
+    session.flush()
+
+    # Add all permissions for note since the user is the owner
+    for permission in PermissionType:
+        add_permission(session, permission, user, note)
 
     return note
 
