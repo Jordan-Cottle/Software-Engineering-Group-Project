@@ -105,7 +105,9 @@ def grant_access(session, user_name, permission_type, note_title):
     note = find_note(session, note_title)
 
     print(f'Adding "{permission_type}" permission for "{user_name}" on "{note_title}"')
-    add_permission(session, PERMISSIONS[permission_type], user, note)
+    add_permission(
+        session, PERMISSIONS[permission_type], user, note, triggered_by=note.owner
+    )
 
     session.commit()
 

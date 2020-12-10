@@ -16,13 +16,30 @@ class UnauthorizedError(Exception):
     """Raised when a user attempts an action they are not authorized for."""
 
 
-def add_permission(session, permission_type: PermissionType, user, note):
+def add_permission(
+    session, permission_type: PermissionType, user, note, triggered_by=None
+):
     """Add permission to user for note.
 
     permission -- The PermissionType to add
     user -- The user to give permission to
     note -- The note to give permission for
+    triggered_by -- The user submitting this request
+        - defaults to the value of user if not provided
     """
+
+    if triggered_by is None:
+        triggered_by = user
+
+    if (
+        not has_permission(session, PermissionType.ADMIN, triggered_by, note)
+        and note.owner != user
+    ):
+        raise UnauthorizedError(
+            f"{user} is not authorized to set permissions for {note}"
+        )
+
+    print(f"{triggered_by} adding {permission_type} permission for {user} on {note}")
 
     permission = NotePermission(type=permission_type, user_id=user.id, note_id=note.id)
 
@@ -31,13 +48,28 @@ def add_permission(session, permission_type: PermissionType, user, note):
     return permission
 
 
-def remove_permission(session, permission_type: PermissionType, user, note):
+def remove_permission(
+    session, permission_type: PermissionType, user, note, triggered_by=None
+):
     """Remove permission from user for note.
 
     permission -- The PermissionType to remove
     user -- The user to take permission from
     note -- The note to remove permission from
     """
+
+    if triggered_by is None:
+        triggered_by = user
+
+    if (
+        not has_permission(session, PermissionType.ADMIN, triggered_by, note)
+        and note.owner != user
+    ):
+        raise UnauthorizedError(
+            f"{user} is not authorized to remove permissions for {note}"
+        )
+
+    print(f"{triggered_by} removing {permission_type} permission for {user} on {note}")
 
     permission = (
         session.query(NotePermission)
