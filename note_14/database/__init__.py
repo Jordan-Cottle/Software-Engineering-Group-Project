@@ -3,9 +3,9 @@
 
 from sqlalchemy import create_engine
 
-from config import DB_FILENAME
+from config import DB_FILENAME, ECHO
 
-ENGINE = create_engine(f"sqlite:///{DB_FILENAME}", echo=True)
+ENGINE = create_engine(f"sqlite:///{DB_FILENAME}", echo=ECHO)
 
 from .session import Session, inject_session, close_session
 
