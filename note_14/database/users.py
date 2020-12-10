@@ -6,6 +6,11 @@ import os
 from hashlib import sha256
 
 from models import User
+from sqlalchemy.orm.exc import NoResultFound
+
+
+class UserNotFound(Exception):
+    """ Error for when an attempt to find a user was unsuccessful. """
 
 
 def create_user(session, name, password):
@@ -31,6 +36,9 @@ def get_user(session, name):
     should not be considered logging in.
     """
 
-    user = session.query(User).filter_by(name=name).one()
+    try:
+        user = session.query(User).filter_by(name=name).one()
+    except NoResultFound as error:
+        raise UserNotFound(f"User {name} does not exist") from error
 
     return user
