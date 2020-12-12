@@ -13,3 +13,4 @@ from .permissions import *
 from .users import *
 from .notes import *
 from .ratings import *
+from .comments import *

@@ -15,7 +15,7 @@ from sqlalchemy.orm.exc import NoResultFound
 from werkzeug.utils import secure_filename
 
 from config import PermissionType
-from models import Attachment, Note, NotePermission, NoteSection
+from models import Attachment, Note, NotePermission, NoteSection, Comment
 from database import UnauthorizedError, add_permission, check_permission
 
 
