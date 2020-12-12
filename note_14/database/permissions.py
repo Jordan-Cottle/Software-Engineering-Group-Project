@@ -33,7 +33,7 @@ def add_permission(
 
     if (
         not has_permission(session, PermissionType.ADMIN, triggered_by, note)
-        and note.owner != user
+        and note.owner_id != triggered_by.id
     ):
         raise UnauthorizedError(
             f"{user} is not authorized to set permissions for {note}"
