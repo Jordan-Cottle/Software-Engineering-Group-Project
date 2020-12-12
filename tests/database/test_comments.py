@@ -38,6 +38,6 @@ def test_get_comment(session, note, user):
 def test_delete_comment(session, note, user):
     add_comment(session, "bye", note.id, user)
     comment = session.query(Comment).filter_by(body="bye").one()
-    delete_comment(session, comment.id, user)
+    delete_comment(session, comment.id, user, note)
     count = session.query(Comment).count()
     assert count == 0

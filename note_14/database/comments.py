@@ -13,7 +13,7 @@ from sqlalchemy.orm.exc import NoResultFound
 
 from config import PermissionType
 from models import Comment
-from database import UnauthorizedError, check_permission, get_note
+from database import UnauthorizedError, check_permission, get_note, has_permission
 
 
 def add_comment(session, text, note_id, user):
@@ -35,8 +35,8 @@ def get_comment(session, comment_id):
         raise UnauthorizedError(f"{comment_id} not found") from error
 
 
-def delete_comment(session, comment_id, user):
+def delete_comment(session, comment_id, note, user):
     """ deletes comment on existing note from the database. """
     comment = get_comment(session, comment_id)
-    if comment.owner_id == user.id:
+    if has_permission(session, PermissionType.ADMIN, user, note):
         session.delete(comment)
