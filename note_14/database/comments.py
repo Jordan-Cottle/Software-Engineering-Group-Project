@@ -9,8 +9,6 @@ delete_comment: Delete a comment from the database
 """
 
 
-from datetime import date
-
 from sqlalchemy.orm.exc import NoResultFound
 
 from config import PermissionType
@@ -30,7 +28,7 @@ def add_comment(session, text, note_id, user):
 
 
 def get_comment(session, comment_id):
-
+    """ gets existing comment from the database """
     try:
         return session.query(Comment).filter_by(id=comment_id).one()
     except NoResultFound as error:
