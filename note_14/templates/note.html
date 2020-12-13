@@ -19,4 +19,21 @@
 {% if admin %}
 <a href=" /notes/{{ note.id }}/permissions">Set Permissions</a>
 {% endif %}
+
+<h4>Comments</h4>
+
+{% for comment in note.comments %}
+
+{{ comment.owner.name }} : {{ comment.body }} {{ comment.date_created }}
+
+{% if admin or current_user.id == comment.owner.id %}<a
+    href="{{ url_for('remove_comment', comment_id=comment.id, note_id = note.id) }}">Delete
+    Comment</a><br>
+{% endif %}
+{% endfor %}
+
+<form action="{{ url_for('create_comment', note_id=note.id) }}" method="post">
+    <input type="text" name="body"> <input type="submit" value="Add Comment">
+</form>
+
 {% endblock body %}

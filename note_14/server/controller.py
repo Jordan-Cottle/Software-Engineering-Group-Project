@@ -14,6 +14,8 @@ from database import (
     get_user,
     add_permission,
     has_permission,
+    add_comment,
+    delete_comment,
 )
 from config import PermissionType
 from flask import g, redirect, render_template, request
@@ -58,6 +60,7 @@ def view_note(note_id):
     """ Render individual note page. """
     note = get_note(g.session, note_id, current_user)
     note.views += 1
+    g.session.commit()
     return render_template(
         "note.html",
         note=get_note(g.session, note_id, current_user),
@@ -69,6 +72,9 @@ def view_note(note_id):
         ),
         can_edit=has_permission(
             g.session, PermissionType.EDIT, current_user, note=note
+        ),
+        can_comment=has_permission(
+            g.session, PermissionType.COMMENT, current_user, note=note
         ),
     )
 
@@ -153,6 +159,29 @@ def note_edit(note_id):
     title = request.form["title"]
     text = request.form["note_text"]
     edit_note(g.session, title, text, note_id, current_user)
+
+    return redirect(url_for("view_note", note_id=note_id))
+
+
+@app.route("/notes/<int:note_id>/addcomment", methods=["GET", "POST"])
+def create_comment(note_id):
+    """ Controller for adding comments """
+    note = get_note(g.session, note_id, current_user)
+    if request.method == "POST":
+        form = request.form
+        body = form["body"]
+        add_comment(g.session, body, note, current_user)
+
+    return redirect(url_for("view_note", note_id=note_id))
+
+
+@app.route(
+    "/notes/<int:note_id>/removecomment/<int:comment_id>", methods=["GET", "POST"]
+)
+def remove_comment(comment_id, note_id):
+    """ Controller for removing comments """
+    note = get_note(g.session, note_id, current_user)
+    delete_comment(g.session, comment_id, note, current_user)
 
     return redirect(url_for("view_note", note_id=note_id))
 
