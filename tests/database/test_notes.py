@@ -158,20 +158,10 @@ def test_add_attachment(session, user, note):
     ), "The new attachment should be associated with the note"
 
 
-def test_delete_attachment(session, user, note):
-    display_name = "test_file.txt"
-    name, ext = os.path.splitext(display_name)
-    file_name = f"{user.name}_{name}_1.{ext}"
-
-    attachment = MagicMock(filename=display_name)
-    model = add_attachment(session, attachment, note, user)
-    session.commit()
-
-    attachment.save.assert_called_once()
-    attachment.save.assert_called_with(file_name)
+def test_delete_attachment(session, user, note, attachment):
 
     before_delete = session.query(Attachment).count()
-    delete_attachment(session, model.id, user, note)
+    delete_attachment(session, attachment.id, user, note)
     after_delete = session.query(Attachment).count()
 
     assert (
@@ -182,24 +172,14 @@ def test_delete_attachment(session, user, note):
     ), "There should be exactly one less attachment in the database"
 
 
-def test_get_attachment(session, user, note):
-    display_name = "test_file.txt"
-    name, ext = os.path.splitext(display_name)
-    file_name = f"{user.name}_{name}_1.{ext}"
+def test_get_attachment(session, user, note, attachment):
 
-    attachment = MagicMock(filename=display_name)
-    model = add_attachment(session, attachment, note, user)
-    session.commit()
-
-    attachment.save.assert_called_once()
-    attachment.save.assert_called_with(file_name)
-
-    test = get_attachment(session, model.id)
+    test = get_attachment(session, attachment.id, note, user)
     assert (
-        model.display_name == test.display_name
+        attachment.display_name == test.display_name
     ), f"Model display name should have the same display name as the test."
     assert (
-        model.file_name == test.file_name
+        attachment.file_name == test.file_name
     ), f"Model file name should have the same file name as the test."
     assert (
         user.id == test.owner_id
