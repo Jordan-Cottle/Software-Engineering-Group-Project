@@ -163,7 +163,7 @@ def note_edit(note_id):
     return redirect(url_for("view_note", note_id=note_id))
 
 
-@app.route("/notes/<int:note_id>/addcomment", methods=["GET", "POST"])
+@app.route("/notes/<int:note_id>/comments", methods=["GET", "POST"])
 def create_comment(note_id):
     """ Controller for adding comments """
     note = get_note(g.session, note_id, current_user)
@@ -176,7 +176,7 @@ def create_comment(note_id):
 
 
 @app.route(
-    "/notes/<int:note_id>/removecomment/<int:comment_id>", methods=["GET", "POST"]
+    "/notes/<int:note_id>/comments/<int:comment_id>/remove", methods=["GET", "POST"]
 )
 def remove_comment(comment_id, note_id):
     """ Controller for removing comments """
