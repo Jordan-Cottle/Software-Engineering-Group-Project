@@ -61,7 +61,7 @@ def view_note(note_id):
         note=get_note(g.session, note_id, current_user),
         admin=has_permission(
             g.session,
-            permissions.PermissionType.ADMIN,
+            PermissionType.ADMIN,
             current_user,
             note=get_note(g.session, note_id, current_user),
         ),
