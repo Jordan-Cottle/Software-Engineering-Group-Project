@@ -11,7 +11,11 @@ from database import (
     delete_note,
     edit_note,
     UnauthorizedError,
+    get_user,
+    add_permission,
+    has_permission,
 )
+from config import PermissionType
 from flask import g, redirect, render_template, request
 from flask.helpers import url_for
 from flask_login import current_user, login_required
@@ -40,14 +44,28 @@ def list_notes():
     else:
         notes = sorted(notes, key=lambda note: getattr(note, sort_by), reverse=reverse)
 
-    return render_template("notes.html", notes=notes, sort_by=sort_by, reverse=reverse)
+    return render_template(
+        "notes.html",
+        notes=notes,
+        sort_by=sort_by,
+        reverse=reverse,
+    )
 
 
 @app.route("/notes/<int:note_id>")
 @login_required
 def view_note(note_id):
     """ Render individual note page. """
-    return render_template("note.html", note=get_note(g.session, note_id, current_user))
+    return render_template(
+        "note.html",
+        note=get_note(g.session, note_id, current_user),
+        admin=has_permission(
+            g.session,
+            PermissionType.ADMIN,
+            current_user,
+            note=get_note(g.session, note_id, current_user),
+        ),
+    )
 
 
 @app.route("/login", methods=["GET", "POST"])
@@ -132,6 +150,29 @@ def note_edit(note_id):
     edit_note(g.session, title, text, note_id, current_user)
 
     return redirect(url_for("view_note", note_id=note_id))
+
+
+@app.route("/notes/<int:note_id>/permissions", methods=["GET", "POST"])
+@login_required
+def set_permissions(note_id):
+    """ Permissions table view controller """
+    note = get_note(g.session, note_id, current_user)
+    if request.method == "POST":
+        form = request.form
+        username = form["user"]
+        otheruser = get_user(g.session, username)
+        add_permission(
+            g.session,
+            PermissionType.READ,
+            otheruser,
+            note,
+            triggered_by=current_user,
+        )
+
+    return render_template(
+        "permission_table.html",
+        note=note,
+    )
 
 
 @app.route("/not_found")
