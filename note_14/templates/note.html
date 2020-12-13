@@ -19,4 +19,28 @@
 {% if admin %}
 <a href=" /notes/{{ note.id }}/permissions">Set Permissions</a>
 {% endif %}
+
+<h4>Comments</h4>
+
+{% for comment in note.comments %}
+
+<section>
+    {{ comment.owner.name }} : {{ comment.body }} {{ comment.date }}
+
+    {% if admin or current_user.id == comment.owner.id %}
+
+    <form class="delete_comment" action="{{ url_for('remove_comment', comment_id = comment.id, note_id=note.id) }}"
+        method="post">
+        <input type="submit" class="delete_comment" value="X">
+    </form>
+</section>
+{% endif %}
+{% endfor %}
+
+{% if can_comment %}
+<form action="{{ url_for('create_comment', note_id=note.id) }}" method="post">
+    <input type="text" name="body"> <input type="submit" value="Add Comment">
+</form>
+{% endif %}
+
 {% endblock body %}
