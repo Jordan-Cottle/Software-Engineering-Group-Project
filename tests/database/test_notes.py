@@ -194,7 +194,7 @@ def test_get_attachment(session, user, note):
     attachment.save.assert_called_once()
     attachment.save.assert_called_with(file_name)
 
-    test = get_attachment(session, model.id, user)
+    test = get_attachment(session, model.id)
     assert (
         model.display_name == test.display_name
     ), f"Model display name should have the same display name as the test."
