@@ -66,7 +66,9 @@ def view_note(note_id):
             current_user,
             note=note,
         ),
-        canedit=has_permission(g.session, PermissionType.EDIT, current_user, note=note),
+        can_edit=has_permission(
+            g.session, PermissionType.EDIT, current_user, note=note
+        ),
     )
 
 
