@@ -9,11 +9,9 @@ delete_comment: Delete a comment from the database
 """
 
 
-from sqlalchemy.orm.exc import NoResultFound
-
 from config import PermissionType
 from models import Comment
-from database import UnauthorizedError, check_permission, has_permission
+from database import check_permission
 
 
 def add_comment(session, text, note, user):
