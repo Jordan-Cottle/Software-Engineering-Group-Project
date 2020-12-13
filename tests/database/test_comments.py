@@ -1,3 +1,5 @@
+"""Testing comment stuff"""
+
 from database import (
     add_comment,
     get_comment,
@@ -16,6 +18,7 @@ def test_add_comment(session, note, user):
 
 
 def test_get_comment(session, note, user):
+    """ test getting comment """
     add_comment(session, "hi", note.id, user)
     comment = session.query(Comment).filter_by(body="hi").one()
     comment2 = get_comment(session, comment.id)
@@ -24,6 +27,7 @@ def test_get_comment(session, note, user):
 
 
 def test_delete_comment(session, note, user):
+    """ test deleting comment """
     add_comment(session, "bye", note.id, user)
     comment = session.query(Comment).filter_by(body="bye").one()
     delete_comment(session, comment.id, user, note)
