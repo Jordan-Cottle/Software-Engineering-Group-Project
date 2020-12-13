@@ -67,8 +67,8 @@ class Note(Base):
         """ Computes the average of ratings for a single note """
         if len(self.ratings) == 0:
             return None
-        else:
-            return sum(rating.value for rating in self.ratings) / len(self.ratings)
+        
+        return sum(rating.value for rating in self.ratings) / len(self.ratings)
 
     def __str__(self):
         return str(self.title)
