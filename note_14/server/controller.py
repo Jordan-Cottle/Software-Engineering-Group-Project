@@ -12,8 +12,8 @@ from database import (
     edit_note,
     UnauthorizedError,
     get_user,
-    add_permission,
     has_permission,
+    update_permissions,
     add_comment,
     delete_comment,
 )
@@ -188,21 +188,57 @@ def remove_comment(comment_id, note_id):
 def set_permissions(note_id):
     """ Permissions table view controller """
     note = get_note(g.session, note_id, current_user)
+
+    permissions = {}
+
+    for permission in note.permissions:
+        if permission.user_id == current_user.id:
+            continue
+
+        permissions.setdefault(permission.user, {})[permission.type] = "true"
+
     if request.method == "POST":
         form = request.form
-        username = form["user"]
-        otheruser = get_user(g.session, username)
-        add_permission(
-            g.session,
-            PermissionType.READ,
-            otheruser,
-            note,
-            triggered_by=current_user,
-        )
+
+        i = 0
+        # Update permissions for existing users
+        while f"user_{i}" in form:
+            user_id = form[f"user_{i}"]
+            user = get_user(g.session, user_id=user_id)
+            user_permissions = []
+            for permission_type in PermissionType:
+                if form.get(f"{permission_type.value}_{i}") is not None:
+                    user_permissions.append(permission_type)
+
+            new_permissions = update_permissions(
+                g.session, user_permissions, user, note, triggered_by=current_user
+            )
+            permissions[user] = {
+                permission.type: "true" for permission in new_permissions
+            }
+            i += 1
+
+        # Process new user entry
+        new_user_name = form["new_user"]
+        if new_user_name:
+            user = get_user(g.session, name=new_user_name)
+            user_permissions = []
+            for permission_type in PermissionType:
+                if form.get(f"new_{permission_type.value}") is not None:
+                    user_permissions.append(permission_type)
+
+            new_permissions = update_permissions(
+                g.session, user_permissions, user, note, triggered_by=current_user
+            )
+            permissions[user] = {
+                permission.type: "true" for permission in new_permissions
+            }
 
     return render_template(
         "permission_table.html",
         note=note,
+        permissions=permissions,
+        permission_types=list(PermissionType),
     )
 
 

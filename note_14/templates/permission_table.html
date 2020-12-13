@@ -3,10 +3,34 @@
 {% block body %}
 
 <form action="{{ url_for('set_permissions', note_id = note.id) }}" method="post">
-    <p><label>Username to add to note</label></p>
-    <p><input type="text" name="user"></p>
-    <p><input type="Submit" value="Add User to Note"></p>
-
+    <table>
+        <thead>
+            <th>User</th>
+            {% for permission_type in permission_types %}
+            <th>{{ permission_type.value.lower().capitalize() }}</th>
+            {% endfor %}
+        </thead>
+        <tbody>
+            {% for user, user_permissions in permissions.items() %}
+            <tr>
+                {% set i = loop.index0 %}
+                <td><input class="hidden" type="text" name="user_{{i}}" value="{{user.id}}">{{user.name}}</td>
+                {% for permission_type in permission_types %}
+                {% set permission_set = user_permissions.get(permission_type, "false") %}
+                <td><input type="checkbox" name="{{permission_type.value}}_{{i}}" {% if permission_set=="true" %}
+                        checked="true" {% endif %}></td>
+                {% endfor %}
+            </tr>
+            {% endfor %}
+            <tr>
+                <td><input type="text" name="new_user" , placeholder="new user"></td>
+                {% for permission_type in permission_types %}
+                <td><input type="checkbox" name="new_{{permission_type.value}}"></td>
+                {% endfor %}
+            </tr>
+        </tbody>
+    </table>
+    <input type="Submit" value="Update Permissions">
 </form>
 
 {% endblock %}
