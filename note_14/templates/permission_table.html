@@ -1,0 +1,12 @@
+{% extends "core.html" %}
+
+{% block body %}
+
+<form action="{{ url_for('set_permissions', note_id = note.id) }}" method="post">
+    <p><label>Username to add to note</label></p>
+    <p><input type="text" name="user"></p>
+    <p><input type="Submit" value="Add User to Note"></p>
+
+</form>
+
+{% endblock %}
