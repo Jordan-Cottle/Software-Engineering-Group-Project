@@ -15,7 +15,7 @@ from database import (
     add_permission,
     has_permission,
 )
-from config import permissions
+from config import PermissionType
 from flask import g, redirect, render_template, request
 from flask.helpers import url_for
 from flask_login import current_user, login_required
@@ -156,15 +156,14 @@ def note_edit(note_id):
 @login_required
 def set_permissions(note_id):
     """ Permissions table view controller """
+    note = get_note(g.session, note_id, current_user)
     if request.method == "POST":
         form = request.form
         username = form["user"]
-        user = current_user
         otheruser = get_user(g.session, username)
-        note = get_note(g.session, note_id, user)
         add_permission(
             g.session,
-            permissions.PermissionType.READ,
+            PermissionType.READ,
             otheruser,
             note,
             triggered_by=current_user,
@@ -172,7 +171,7 @@ def set_permissions(note_id):
 
     return render_template(
         "permission_table.html",
-        note=get_note(g.session, note_id, current_user),
+        note=note,
     )
 
 
