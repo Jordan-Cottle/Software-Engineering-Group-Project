@@ -135,8 +135,8 @@ def get_attachment(session, attachment_id, user):
 
 
 def delete_attachment(session, attachment_id, note, user):
-    """ Deletes attachment from database """ 
-    
+    """ Deletes attachment from database """
+
     check_permission(session, PermissionType.EDIT, user, note)
     attachment = get_attachment(session, attachment_id, user)
     session.delete(attachment)
