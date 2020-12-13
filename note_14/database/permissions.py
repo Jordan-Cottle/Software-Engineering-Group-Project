@@ -8,6 +8,7 @@ remove_permission -- Used to remove permissions from users on notes.
 has_permission -- Used to check permissions of a user on a note.
 """
 
+from typing import List
 from config import PermissionType
 from models import NotePermission
 
@@ -56,6 +57,8 @@ def remove_permission(
     permission -- The PermissionType to remove
     user -- The user to take permission from
     note -- The note to remove permission from
+    triggered_by -- The user submitting this request
+        - defaults to the value of user if not provided
     """
 
     if triggered_by is None:
@@ -102,3 +105,51 @@ def check_permission(session, permission_type: PermissionType, user, note):
         raise UnauthorizedError(
             f"{user} not authorized for {permission_type} on {note}"
         )
+
+
+def update_permissions(
+    session, permission_types: List[PermissionType], user, note, triggered_by
+):
+    """Update database so that user has exactly the permissions listed.
+
+    permissions -- The PermissionTypes that should be set
+    user -- The user to update permissions for
+    note -- The note to update permissions for
+    triggered_by -- The user submitting this request
+    """
+    set_permissions = [
+        permission for permission in note.permissions if permission.user_id == user.id
+    ]
+
+    for permission_type in PermissionType:
+        permission_set = permission_type in permission_types
+        had_permission = has_permission(session, permission_type, user, note)
+        # Check for added permissions
+        if permission_set and not had_permission:
+            new_permission = add_permission(
+                session,
+                permission_type,
+                user,
+                note,
+                triggered_by=triggered_by,
+            )
+            set_permissions.append(new_permission)
+
+        # Check for removed permissions
+        elif not permission_set and has_permission(
+            session, permission_type, user, note
+        ):
+            remove_permission(
+                session,
+                permission_type,
+                user,
+                note,
+                triggered_by=triggered_by,
+            )
+            set_permissions = [
+                permission
+                for permission in set_permissions
+                if permission.type != permission_type
+            ]
+
+    return set_permissions
