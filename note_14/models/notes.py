@@ -7,7 +7,7 @@ NoteSection -- Represents a single section of a note.
 
 Rating -- Represents the rating of a single note
 """
-import datetime
+from datetime import datetime
 from sqlalchemy import Column, Integer, String, Date, ForeignKey, DateTime
 from sqlalchemy.orm import relationship
 from models import Base
@@ -139,7 +139,7 @@ class Comment(Base):
     note_id = Column(Integer, ForeignKey("note.note_id"), index=True)
     owner_id = Column(Integer, ForeignKey("user.user_id"), index=True)
     body = Column(String)
-    date_created = Column("date", DateTime, default=datetime.date.today())
+    date_created = Column("date", DateTime, default=datetime.today)
 
     @property
     def date(self):
