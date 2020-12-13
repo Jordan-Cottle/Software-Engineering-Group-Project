@@ -21,10 +21,10 @@ class Note(Base):
 
     __tablename__ = "note"
     id = Column("note_id", Integer, primary_key=True)
-    title = Column(String)
-    created = Column(Date)
-    views = Column(Integer)
-    owner_id = Column(Integer, ForeignKey("user.user_id"))
+    title = Column(String, nullable=False)
+    created = Column(Date, nullable=False)
+    views = Column(Integer, default=0, nullable=False)
+    owner_id = Column(Integer, ForeignKey("user.user_id"), nullable=False)
     sections = relationship(
         "NoteSection",
         order_by="NoteSection.index",
@@ -55,10 +55,6 @@ class Note(Base):
             for i, line in enumerate(value.split("\n"))
         ]
         self.sections = sections
-
-    def increment_views(self):
-        """increment views"""
-        self.views = self.views + 1
 
     @property
     def date(self):

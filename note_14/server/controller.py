@@ -57,7 +57,7 @@ def list_notes():
 def view_note(note_id):
     """ Render individual note page. """
     note = get_note(g.session, note_id, current_user)
-    note.increment_views()
+    note.views += 1
     return render_template(
         "note.html",
         note=get_note(g.session, note_id, current_user),
