@@ -52,7 +52,7 @@ def get_note(session, note_id, user):
 
 def create_note(session, title, text, user):
     """ Create a new note in the database. """
-    note = Note(title=title, created=date.today(), owner_id=user.id)
+    note = Note(title=title, created=date.today(), owner_id=user.id, views=0)
     session.add(note)
 
     for i, line in enumerate(text.split("\n")):

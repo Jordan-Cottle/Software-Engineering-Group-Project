@@ -56,6 +56,10 @@ class Note(Base):
         ]
         self.sections = sections
 
+    def increment_views(self):
+        """increment views"""
+        self.views = self.views + 1
+
     @property
     def date(self):
         """ Get a formatted string version of the created date. """
