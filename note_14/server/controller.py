@@ -178,7 +178,7 @@ def create_comment(note_id):
 @app.route(
     "/notes/<int:note_id>/comments/<int:comment_id>/remove", methods=["GET", "POST"]
 )
-def remove_comment(comment_id, note_id):
+def remove_comment(note_id, comment_id):
     """ Controller for removing comments """
     note = get_note(g.session, note_id, current_user)
     delete_comment(g.session, comment_id, note, current_user)
