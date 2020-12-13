@@ -34,7 +34,6 @@ def get_comment(session, comment_id, note, user):
 def delete_comment(session, comment_id, note, user):
     """ deletes comment on existing note from the database. """
     comment = get_comment(session, comment_id, note, user)
-    if comment.owner_id == user.id:
-        session.delete(comment)
-    check_permission(session, PermissionType.ADMIN, user, note)
+    if comment.owner_id != user.id:
+        check_permission(session, PermissionType.ADMIN, user, note)
     session.delete(comment)
