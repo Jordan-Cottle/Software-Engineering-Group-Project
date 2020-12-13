@@ -11,6 +11,8 @@ from database import (
     edit_note,
     add_attachment,
     add_permission,
+    get_attachment,
+    delete_attachment,
 )
 from models import Note, Attachment
 
@@ -154,3 +156,54 @@ def test_add_attachment(session, user, note):
     assert (
         attachment.note == note
     ), "The new attachment should be associated with the note"
+
+
+def test_delete_attachment(session, user, note):
+    display_name = "test_file.txt"
+    name, ext = os.path.splitext(display_name)
+    file_name = f"{user.name}_{name}_1.{ext}"
+
+    attachment = MagicMock(filename=display_name)
+    model = add_attachment(session, attachment, note, user)
+    session.commit()
+
+    attachment.save.assert_called_once()
+    attachment.save.assert_called_with(file_name)
+
+    before_delete = session.query(Attachment).count()
+    delete_attachment(session, model.id, user, note)
+    after_delete = session.query(Attachment).count()
+
+    assert (
+        before_delete > after_delete
+    ), "Delete should reduce the number of attachments in the database."
+    assert (
+        before_delete == after_delete + 1
+    ), "There should be exactly one less attachment in the database"
+
+
+def test_get_attachment(session, user, note):
+    display_name = "test_file.txt"
+    name, ext = os.path.splitext(display_name)
+    file_name = f"{user.name}_{name}_1.{ext}"
+
+    attachment = MagicMock(filename=display_name)
+    model = add_attachment(session, attachment, note, user)
+    session.commit()
+
+    attachment.save.assert_called_once()
+    attachment.save.assert_called_with(file_name)
+
+    test = get_attachment(session, model.id, user)
+    assert (
+        model.display_name == test.display_name
+    ), f"Model display name should have the same display name as the test."
+    assert (
+        model.file_name == test.file_name
+    ), f"Model file name should have the same file name as the test."
+    assert (
+        user.id == test.owner_id
+    ), f"The user id should be the same as the test user id."
+    assert (
+        note.id == test.note_id
+    ), f"The note id should be the same as the test note id."

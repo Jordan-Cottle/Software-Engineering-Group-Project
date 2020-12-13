@@ -124,3 +124,12 @@ def add_attachment(session, attachment, note, user):
     attachment.save(file_name)
 
     return attachment_model
+
+def get_attachment(session,attachment_id, user):
+    attachment = session.query(Attachment).filter_by(id = attachment_id).one()
+    return attachment 
+
+def delete_attachment(session, attachment_id, note, user):
+    check_permission(session, PermissionType.EDIT, user, note)
+    attachment = get_attachment(session, attachment_id, user)
+    session.delete(attachment)
