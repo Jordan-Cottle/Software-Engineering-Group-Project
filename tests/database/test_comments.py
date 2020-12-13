@@ -11,7 +11,7 @@ from models import Comment
 def test_add_comment(session, note, user):
     """ test adding comment """
     commentbody = "Wow comments wow"
-    add_comment(session, commentbody, note.id, user)
+    add_comment(session, commentbody, note, user)
     commentcount = session.query(Comment).filter_by(owner_id=user.id).count()
 
     assert commentcount == 1
@@ -21,7 +21,7 @@ def test_get_comment(session, note, user):
     """ test getting comment """
     add_comment(session, "hi", note.id, user)
     comment = session.query(Comment).filter_by(body="hi").one()
-    comment2 = get_comment(session, comment.id)
+    comment2 = get_comment(session, comment.id, user, note)
 
     assert comment == comment2
 
