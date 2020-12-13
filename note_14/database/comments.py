@@ -13,7 +13,7 @@ from sqlalchemy.orm.exc import NoResultFound
 
 from config import PermissionType
 from models import Comment
-from database import UnauthorizedError, check_permission, get_note, has_permission
+from database import UnauthorizedError, check_permission, has_permission
 
 
 def add_comment(session, text, note, user):
@@ -33,6 +33,7 @@ def get_comment(session, comment_id, user, note):
             return session.query(Comment).filter_by(id=comment_id).one()
         except NoResultFound as error:
             raise UnauthorizedError(f"{comment_id} not found") from error
+    return None
 
 
 def delete_comment(session, comment_id, note, user):
