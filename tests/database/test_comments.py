@@ -1,21 +1,9 @@
-import os
-from unittest.mock import MagicMock
-
-from config import PermissionType
 from database import (
-    get_note,
-    get_notes,
-    create_note,
-    delete_note,
-    create_rating,
-    edit_note,
-    add_attachment,
-    add_permission,
     add_comment,
     get_comment,
     delete_comment,
 )
-from models import Note, Attachment, Comment
+from models import Comment
 
 
 def test_add_comment(session, note, user):
