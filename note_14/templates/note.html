@@ -24,13 +24,16 @@
 
 {% for comment in note.comments %}
 
-{{ comment.owner.name }} : {{ comment.body }} {{ comment.date_created }}
+<section>
+    {{ comment.owner.name }} : {{ comment.body }} {{ comment.date }}
 
-{% if admin or current_user.id == comment.owner.id %}
+    {% if admin or current_user.id == comment.owner.id %}
 
-<form action="{{ url_for('remove_comment', comment_id = comment.id, note_id=note.id) }}" method="post">
-    <input type="submit" style="border: none" value="X">
-</form>
+    <form class="delete_comment" action="{{ url_for('remove_comment', comment_id = comment.id, note_id=note.id) }}"
+        method="post">
+        <input type="submit" class="delete_comment" value="X">
+    </form>
+</section>
 {% endif %}
 {% endfor %}
 
