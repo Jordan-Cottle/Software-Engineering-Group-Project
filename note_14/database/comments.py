@@ -26,18 +26,15 @@ def add_comment(session, text, note, user):
     session.add(comment)
 
 
-def get_comment(session, comment_id, user, note):
+def get_comment(session, comment_id, note, user):
     """ gets existing comment from the database """
-    if has_permission(session, PermissionType.READ, user, note):
-        try:
-            return session.query(Comment).filter_by(id=comment_id).one()
-        except NoResultFound as error:
-            raise UnauthorizedError(f"{comment_id} not found") from error
-    return None
+    check_permission(session, PermissionType.READ, user, note)
+
+    return session.query(Comment).filter_by(id=comment_id).one()
 
 
 def delete_comment(session, comment_id, note, user):
     """ deletes comment on existing note from the database. """
-    comment = get_comment(session, comment_id, user, note)
-    if has_permission(session, PermissionType.ADMIN, user, note):
-        session.delete(comment)
+    check_permission(session, PermissionType.ADMIN, user, note)
+    comment = session.query(Comment).filter_by(id=comment_id).one()
+    session.delete(comment)
