@@ -26,9 +26,11 @@
 
 {{ comment.owner.name }} : {{ comment.body }} {{ comment.date_created }}
 
-{% if admin or current_user.id == comment.owner.id %}<a
-    href="{{ url_for('remove_comment', comment_id=comment.id, note_id = note.id) }}">Delete
-    Comment</a><br>
+{% if admin or current_user.id == comment.owner.id %}
+
+<form action="{{ url_for('remove_comment', comment_id = comment.id, note_id=note.id) }}" method="post">
+    <input type="submit" style="border: none" value="X">
+</form>
 {% endif %}
 {% endfor %}
 
