@@ -56,6 +56,7 @@ def list_notes():
 @login_required
 def view_note(note_id):
     """ Render individual note page. """
+    note = get_note(g.session, note_id, current_user)
     return render_template(
         "note.html",
         note=get_note(g.session, note_id, current_user),
@@ -63,8 +64,9 @@ def view_note(note_id):
             g.session,
             PermissionType.ADMIN,
             current_user,
-            note=get_note(g.session, note_id, current_user),
+            note=note,
         ),
+        canedit=has_permission(g.session, PermissionType.EDIT, current_user, note=note),
     )
 
 
