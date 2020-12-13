@@ -127,6 +127,7 @@ def add_attachment(session, attachment, note, user):
 
 def get_attachment(session,attachment_id, user):
     attachment = session.query(Attachment).filter_by(id=attachment_id).one()
+    
     return attachment 
 
 def delete_attachment(session, attachment_id, note, user):
