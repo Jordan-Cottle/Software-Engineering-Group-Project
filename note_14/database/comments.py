@@ -33,6 +33,8 @@ def get_comment(session, comment_id, note, user):
 
 def delete_comment(session, comment_id, note, user):
     """ deletes comment on existing note from the database. """
+    comment = get_comment(session, comment_id, note, user)
+    if comment.owner_id == user.id:
+        session.delete(comment)
     check_permission(session, PermissionType.ADMIN, user, note)
-    comment = session.query(Comment).filter_by(id=comment_id).one()
     session.delete(comment)
