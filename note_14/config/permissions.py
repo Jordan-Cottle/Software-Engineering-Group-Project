@@ -15,7 +15,7 @@ class PermissionType(str, Enum):
     ADMIN -- Allow user to edit permissions on a note
     """
 
+    ADMIN = "admin"
     READ = "read"
     EDIT = "edit"
     COMMENT = "comment"
-    ADMIN = "admin"
