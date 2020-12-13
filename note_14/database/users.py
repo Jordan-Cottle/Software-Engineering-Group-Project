@@ -29,7 +29,7 @@ def create_user(session, name, password):
     return user
 
 
-def get_user(session, name):
+def get_user(session, name=None, user_id=None):
     """Retrieve a user by their name from the database.
 
     This does not do any checks on the password/hash. Just getting a reference to this model
@@ -37,7 +37,12 @@ def get_user(session, name):
     """
 
     try:
-        user = session.query(User).filter_by(name=name).one()
+        if name is not None:
+            user = session.query(User).filter_by(name=name).one()
+        elif user_id is not None:
+            user = session.query(User).filter_by(id=user_id).one()
+        else:
+            raise TypeError("get_user() requires either a name or a user_id")
     except NoResultFound as error:
         raise UserNotFound(f"User {name} does not exist") from error
 
