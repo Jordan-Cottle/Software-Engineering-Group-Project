@@ -19,3 +19,8 @@ def test_list_notes_without_permission():
 )
 def test_list_notes_without_permission():
     pass
+
+
+@scenario("permissions.feature", "Joe navigates to permission setting view")
+def test_navigate_to_permission_view():
+    pass

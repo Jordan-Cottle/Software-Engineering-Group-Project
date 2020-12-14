@@ -124,6 +124,20 @@ def request_route(session, test_session, note_title):
     test_session.get(f"notes/{note.id}")
 
 
+@when(parse('I click on "{item}"'))
+def click_on_item(test_session, item):
+    html = test_session.response.get_data(as_text=True)
+    link = f"{item}</a>" in html
+
+    if link:
+        match = re.search(f'<a href="([^"]+)">{item}</a>', html)
+        assert match, f"Link labeled {item} not found in {html}"
+        test_session.get(match.group(1))
+        return
+
+    assert False, f"{item} is not a link, test could not determine what to click on"
+
+
 @when(parse('I enter "{value}" for "{field}"'))
 def enter_form_data(test_session, value, field):
     test_session.form[field] = value
