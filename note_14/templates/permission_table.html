@@ -23,7 +23,7 @@
             </tr>
             {% endfor %}
             <tr>
-                <td><input type="text" name="new_user" , placeholder="new user"></td>
+                <td><input type="text" name="new_user" placeholder="new user"></td>
                 {% for permission_type in permission_types %}
                 <td><input type="checkbox" name="new_{{permission_type.value}}"></td>
                 {% endfor %}
