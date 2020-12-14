@@ -4,7 +4,13 @@ import os
 
 from server import app
 
+from database import ENGINE
+from models import Base
+
+
 if __name__ == "__main__":
+    # Create database schema
+    Base.metadata.create_all(ENGINE.engine)
     app.run(
         host=os.getenv("IP", "127.0.0.1"),
         port=int(os.getenv("PORT", "5000")),

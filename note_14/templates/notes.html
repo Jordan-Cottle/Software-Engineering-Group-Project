@@ -1,10 +1,43 @@
 {% extends "core.html" %}
 {% block body %}
+<table>
+    <thead>
+        <tr>
+            <th colspan="2">Notes</th>
+        </tr>
+        <tr>
 
-<h1>List of available notes</h1>
-<ul>
-    {% for note in notes %}
-    <li><a href="/notes/{{ note.id }}">{{ note.title }}</a></li>
-    {% endfor %}
-</ul>
+            {% if sort_by == "title" %}
+            {% set reverse = not reverse %}
+            {% endif %}
+
+            <th><a href="{{ url_for('list_notes', sort_by='title', reverse=reverse) }}">Title</a></th>
+
+            {% if sort_by == "owner" %}
+            {% set reverse = not reverse %}
+            {% endif %}
+            <th><a href="{{ url_for('list_notes', sort_by='owner', reverse=reverse) }}">Owner</a></th>
+
+            {% if sort_by == "rating" %}
+            {% set reverse = not reverse %}
+            {% endif %}
+            <th><a href="{{ url_for('list_notes', sort_by='rating', reverse=reverse) }}">Rating</a></th>
+
+            {% if sort_by == "views" %}
+            {% set reverse = not reverse %}
+            {% endif %}
+            <th><a href="{{ url_for('list_notes', sort_by='views', reverse=reverse) }}">Views</a></th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for note in notes %}
+        <tr>
+            <td><a href=" /notes/{{ note.id }}">{{ note.title }}</a></td>
+            <td>{{ note.owner.name }}</td>
+            <td>{{ note.rating }}</td>
+            <td>{{ note.views }}</td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
 {% endblock body %}

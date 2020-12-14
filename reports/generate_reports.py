@@ -1,4 +1,4 @@
-import os
+import sys
 import re
 from datetime import date, timedelta
 
@@ -84,4 +84,9 @@ def generate_team_report(report_date):
 
 
 if __name__ == "__main__":
-    generate_team_report(date.today())
+    try:
+        offset = sys.argv[1]
+    except IndexError:
+        offset = 0
+
+    generate_team_report(date.today() - timedelta(days=int(offset)))

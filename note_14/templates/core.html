@@ -14,8 +14,13 @@
     <h1>Navigation</h1>
     <ul>
         {% block navigation %}
-        <li><a href="/">Home</a></li>
-        <li><a href="/notes">Course notes</a></li>
+        <li><a href="{{ url_for('main_page') }}">Home</a></li>
+        {% if not current_user.is_authenticated %}
+        <li><a href="{{ url_for('user_login') }}">Login</a></li>
+        {% else %}
+        <li><a href="{{ url_for('list_notes') }}">Course notes</a></li>
+        <li><a href="{{ url_for('create_new_note') }}">Create note</a></li>
+        {% endif %}
         {% endblock navigation %}
     </ul>
 
