@@ -65,6 +65,9 @@ class Note(Base):
     @property
     def rating(self):
         """ Computes the average of ratings for a single note """
+        if len(self.ratings) == 0:
+            return None
+
         return sum(rating.value for rating in self.ratings) / len(self.ratings)
 
     def __str__(self):
