@@ -27,17 +27,15 @@ Feature: Private notes
         When I navigate to the note detail page for "Spring 2021 courses"
         Then I should see "Spring 2021 courses"
 
-    # Inactive
-    Scenario: Joe gives access to Susy
+    Scenario: Joe navigates to permission setting view
         Given I am logged in as "Joe"
-        And I am on the note detail page for "Spring 2021 courses"
-        And the note "Spring 2021 courses" is "private"
-        When I click on "grant access"
-        Then I should see a form for user privileges
-        # Break this up into navigate to permission form and submit form scenarios
-        When I enter "Susy" for the name
-        And I select "view" for the priviledge
-        And I press "grant"
-        Then I should see "View access to spring 2021 courses granted to Susy"
-        And "Susy" should have permission to view "Spring 2021 courses"
+        When I navigate to the note detail page for "Spring 2021 courses"
+        And I click on "Set Permissions"
+        Then I should see "User"
+        And I should see "Admin"
+        And I should see "Read"
+        And I should see "Edit"
+        And I should see "Comment"
+        And I should see "new user"
+        And I should see "Update Permissions"
 
