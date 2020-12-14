@@ -7,3 +7,10 @@ ignore=
 
 # Don't flag notes
 notes=
+
+[TYPECHECK]
+
+generated-members=
+    user
+    owner
+    note

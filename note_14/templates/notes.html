@@ -17,6 +17,16 @@
             {% set reverse = not reverse %}
             {% endif %}
             <th><a href="{{ url_for('list_notes', sort_by='owner', reverse=reverse) }}">Owner</a></th>
+
+            {% if sort_by == "rating" %}
+            {% set reverse = not reverse %}
+            {% endif %}
+            <th><a href="{{ url_for('list_notes', sort_by='rating', reverse=reverse) }}">Rating</a></th>
+
+            {% if sort_by == "views" %}
+            {% set reverse = not reverse %}
+            {% endif %}
+            <th><a href="{{ url_for('list_notes', sort_by='views', reverse=reverse) }}">Views</a></th>
         </tr>
     </thead>
     <tbody>
@@ -24,6 +34,8 @@
         <tr>
             <td><a href=" /notes/{{ note.id }}">{{ note.title }}</a></td>
             <td>{{ note.owner.name }}</td>
+            <td>{{ note.rating }}</td>
+            <td>{{ note.views }}</td>
         </tr>
         {% endfor %}
     </tbody>

@@ -7,7 +7,7 @@ NoteSection -- Represents a single section of a note.
 
 Rating -- Represents the rating of a single note
 """
-import datetime
+from datetime import datetime
 from sqlalchemy import Column, Integer, String, Date, ForeignKey, DateTime
 from sqlalchemy.orm import relationship
 from models import Base
@@ -21,10 +21,10 @@ class Note(Base):
 
     __tablename__ = "note"
     id = Column("note_id", Integer, primary_key=True)
-    title = Column(String)
-    created = Column(Date)
-    views = Column(Integer)
-    owner_id = Column(Integer, ForeignKey("user.user_id"))
+    title = Column(String, nullable=False)
+    created = Column(Date, nullable=False)
+    views = Column(Integer, default=0, nullable=False)
+    owner_id = Column(Integer, ForeignKey("user.user_id"), nullable=False)
     sections = relationship(
         "NoteSection",
         order_by="NoteSection.index",
@@ -35,6 +35,9 @@ class Note(Base):
     comments = relationship("Comment", cascade="all, delete-orphan", backref="note")
     attachments = relationship(
         "Attachment", cascade="all, delete-orphan", backref="note"
+    )
+    permissions = relationship(
+        "NotePermission", backref="note", cascade="all, delete-orphan"
     )
 
     @property
@@ -62,7 +65,13 @@ class Note(Base):
     @property
     def rating(self):
         """ Computes the average of ratings for a single note """
+        if len(self.ratings) == 0:
+            return 0
+
         return sum(rating.value for rating in self.ratings) / len(self.ratings)
+
+    def __str__(self):
+        return str(self.title)
 
 
 class NoteSection(Base):
@@ -133,7 +142,7 @@ class Comment(Base):
     note_id = Column(Integer, ForeignKey("note.note_id"), index=True)
     owner_id = Column(Integer, ForeignKey("user.user_id"), index=True)
     body = Column(String)
-    date_created = Column("date", DateTime, default=datetime.date.today())
+    date_created = Column("date", DateTime, default=datetime.today)
 
     @property
     def date(self):

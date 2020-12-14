@@ -14,3 +14,4 @@ Base = declarative_base()
 
 from .notes import Note, NoteSection, Rating, Comment, Attachment
 from .users import User
+from .permissions import NotePermission

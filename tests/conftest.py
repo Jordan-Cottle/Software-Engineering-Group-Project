@@ -4,13 +4,21 @@ import config
 
 config.DB_FILENAME = f":memory:"
 
+import os
+from unittest.mock import MagicMock
+
 # Set up models in the in-memory db
 from models import Base
 from database import Session, ENGINE
 
 from server import app
 
-from database import create_note, create_user, get_user
+from database import (
+    create_note,
+    create_user,
+    get_user,
+    add_attachment,
+)
 
 
 @pytest.fixture(name="client")
@@ -80,3 +88,20 @@ def test_notes(session, user):
     session.commit()
 
     return notes
+
+
+@pytest.fixture(name="attachment")
+def test_attachment(session, user, note):
+    display_name = "test_file.txt"
+    name, ext = os.path.splitext(display_name)
+    file_name = f"{user.name}_{name}_1.{ext}"
+
+    attachment = MagicMock(filename=display_name)
+    model = add_attachment(session, attachment, note, user)
+    session.commit()
+
+    attachment.save.assert_called_once()
+    attachment.save.assert_called_with(file_name)
+    session.commit()
+
+    return model

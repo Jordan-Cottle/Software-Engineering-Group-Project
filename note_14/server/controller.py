@@ -10,7 +10,14 @@ from database import (
     create_note,
     delete_note,
     edit_note,
+    UnauthorizedError,
+    get_user,
+    has_permission,
+    update_permissions,
+    add_comment,
+    delete_comment,
 )
+from config import PermissionType
 from flask import g, redirect, render_template, request
 from flask.helpers import url_for
 from flask_login import current_user, login_required
@@ -39,14 +46,37 @@ def list_notes():
     else:
         notes = sorted(notes, key=lambda note: getattr(note, sort_by), reverse=reverse)
 
-    return render_template("notes.html", notes=notes, sort_by=sort_by, reverse=reverse)
+    return render_template(
+        "notes.html",
+        notes=notes,
+        sort_by=sort_by,
+        reverse=reverse,
+    )
 
 
 @app.route("/notes/<int:note_id>")
 @login_required
 def view_note(note_id):
     """ Render individual note page. """
-    return render_template("note.html", note=get_note(g.session, note_id, current_user))
+    note = get_note(g.session, note_id, current_user)
+    note.views += 1
+    g.session.commit()
+    return render_template(
+        "note.html",
+        note=get_note(g.session, note_id, current_user),
+        admin=has_permission(
+            g.session,
+            PermissionType.ADMIN,
+            current_user,
+            note=note,
+        ),
+        can_edit=has_permission(
+            g.session, PermissionType.EDIT, current_user, note=note
+        ),
+        can_comment=has_permission(
+            g.session, PermissionType.COMMENT, current_user, note=note
+        ),
+    )
 
 
 @app.route("/login", methods=["GET", "POST"])
@@ -64,7 +94,9 @@ def user_login():
 
         return redirect(url_for("main_page"))
 
-    return render_template("login.html")
+    error = request.args.get("error")
+
+    return render_template("login.html", error=error)
 
 
 @app.route("/register", methods=["GET", "POST"])
@@ -129,3 +161,95 @@ def note_edit(note_id):
     edit_note(g.session, title, text, note_id, current_user)
 
     return redirect(url_for("view_note", note_id=note_id))
+
+
+@app.route("/notes/<int:note_id>/comments", methods=["POST"])
+def create_comment(note_id):
+    """ Controller for adding comments """
+    note = get_note(g.session, note_id, current_user)
+    form = request.form
+    body = form["body"]
+    add_comment(g.session, body, note, current_user)
+
+    return redirect(url_for("view_note", note_id=note_id))
+
+
+@app.route("/notes/<int:note_id>/comments/<int:comment_id>/remove", methods=["POST"])
+def remove_comment(comment_id, note_id):
+    """ Controller for removing comments """
+    note = get_note(g.session, note_id, current_user)
+    delete_comment(g.session, comment_id, note, current_user)
+
+    return redirect(url_for("view_note", note_id=note_id))
+
+
+@app.route("/notes/<int:note_id>/permissions", methods=["GET", "POST"])
+@login_required
+def set_permissions(note_id):
+    """ Permissions table view controller """
+    note = get_note(g.session, note_id, current_user)
+
+    permissions = {}
+
+    for permission in note.permissions:
+        if permission.user_id == current_user.id:
+            continue
+
+        permissions.setdefault(permission.user, {})[permission.type] = "true"
+
+    if request.method == "POST":
+        form = request.form
+
+        i = 0
+        # Update permissions for existing users
+        while f"user_{i}" in form:
+            user_id = form[f"user_{i}"]
+            user = get_user(g.session, user_id=user_id)
+            user_permissions = []
+            for permission_type in PermissionType:
+                if form.get(f"{permission_type.value}_{i}") is not None:
+                    user_permissions.append(permission_type)
+
+            new_permissions = update_permissions(
+                g.session, user_permissions, user, note, triggered_by=current_user
+            )
+            permissions[user] = {
+                permission.type: "true" for permission in new_permissions
+            }
+            i += 1
+
+        # Process new user entry
+        new_user_name = form["new_user"]
+        if new_user_name:
+            user = get_user(g.session, name=new_user_name)
+            user_permissions = []
+            for permission_type in PermissionType:
+                if form.get(f"new_{permission_type.value}") is not None:
+                    user_permissions.append(permission_type)
+
+            new_permissions = update_permissions(
+                g.session, user_permissions, user, note, triggered_by=current_user
+            )
+            permissions[user] = {
+                permission.type: "true" for permission in new_permissions
+            }
+
+    return render_template(
+        "permission_table.html",
+        note=note,
+        permissions=permissions,
+        permission_types=list(PermissionType),
+    )
+
+
+@app.route("/not_found")
+def unauthorized():
+    """ Display a generic 404 page for unauthorized requests. """
+    return render_template("unauthorized.html")
+
+
+@app.errorhandler(UnauthorizedError)
+def unauthorized_redirect(error):
+    """ Send user to the unauthorized page. """
+    print(f"UNAUTHORIZED: {error}")
+    return redirect(url_for("unauthorized"))
