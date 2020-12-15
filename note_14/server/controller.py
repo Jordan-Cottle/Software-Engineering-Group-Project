@@ -17,7 +17,7 @@ from database import (
     add_comment,
     delete_comment,
     create_rating,
-    get_rating
+    get_rating,
 )
 from config import PermissionType
 from flask import g, redirect, render_template, request
@@ -82,9 +82,8 @@ def view_note(note_id):
         can_comment=has_permission(
             g.session, PermissionType.COMMENT, current_user, note=note
         ),
-        has_rated = has_rated
-        ,
-        rating = rating
+        has_rated=has_rated,
+        rating=rating,
     )
 
 
@@ -171,6 +170,7 @@ def note_edit(note_id):
 
     return redirect(url_for("view_note", note_id=note_id))
 
+
 @app.route("/notes/<int:note_id>/rate", methods=["POST"])
 @login_required
 def rate_note(note_id):
@@ -180,8 +180,9 @@ def rate_note(note_id):
         create_rating(g.session, current_user, note, rating)
     else:
         get_rating(g.session, current_user, note).value = rating
-    
+
     return redirect(url_for("view_note", note_id=note_id))
+
 
 @app.route("/notes/<int:note_id>/comments", methods=["POST"])
 def create_comment(note_id):

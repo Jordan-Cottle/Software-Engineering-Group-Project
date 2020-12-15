@@ -91,6 +91,7 @@ def test_create_rating(session, user, note):
     assert rating.owner_id == user.id, "Rating owner should match user's ID"
     assert rating.value == 5, "The value of rating should match the value of 5"
 
+
 def test_get_rating(session, user, note):
 
     firstcheck = get_rating(session, user, note)
@@ -101,6 +102,8 @@ def test_get_rating(session, user, note):
     assert secondcheck.value == 5
     assert secondcheck.owner_id == user.id
     assert secondcheck.note_id == note.id
+
+
 def test_average_ratings(session, user, other_user, note):
 
     create_rating(session, user, note, 1)
