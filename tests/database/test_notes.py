@@ -144,19 +144,27 @@ def test_edit_note(session, user, note):
 
 def test_cascades_work(session, user, note):
     """ make sure all things related to a note are deleted when a note is deleted """
-    user2 = create_user(session, "dafdsfas","dfadsfdsaf")
+    user2 = create_user(session, "dafdsfas", "dfadsfdsaf")
     add_permission(session, PermissionType.READ, user2, note, triggered_by=user)
-    add_comment(session,"fdsa",note,user)
+    add_comment(session, "fdsa", note, user)
     create_rating(session, user, note, 5)
-    delete_note(session,note.id,user)
-    permissioncheck = session.query(NotePermission).filter_by(
-        user_id = user2.id, note_id = note.id).first()
-    ratingcheck = session.query(Rating).filter_by(owner_id = user.id, note_id = note.id).first()
-    commentcheck = session.query(Comment).filter_by(owner_id = user.id, note_id = note.id).first()
+    delete_note(session, note.id, user)
+    permissioncheck = (
+        session.query(NotePermission)
+        .filter_by(user_id=user2.id, note_id=note.id)
+        .first()
+    )
+    ratingcheck = (
+        session.query(Rating).filter_by(owner_id=user.id, note_id=note.id).first()
+    )
+    commentcheck = (
+        session.query(Comment).filter_by(owner_id=user.id, note_id=note.id).first()
+    )
 
     assert permissioncheck is None
     assert ratingcheck is None
     assert commentcheck is None
+
 
 def test_add_attachment(session, user, note):
     """ Test uploading an attachment. """
