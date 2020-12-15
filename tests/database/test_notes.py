@@ -8,6 +8,7 @@ from database import (
     create_note,
     delete_note,
     create_rating,
+    get_rating,
     edit_note,
     add_attachment,
     add_permission,
@@ -89,6 +90,18 @@ def test_create_rating(session, user, note):
     assert rating.note_id == note.id, "Rating note ID should match note ID created"
     assert rating.owner_id == user.id, "Rating owner should match user's ID"
     assert rating.value == 5, "The value of rating should match the value of 5"
+
+
+def test_get_rating(session, user, note):
+
+    firstcheck = get_rating(session, user, note)
+    create_rating(session, user, note, 5)
+    secondcheck = get_rating(session, user, note)
+
+    assert firstcheck is None
+    assert secondcheck.value == 5
+    assert secondcheck.owner_id == user.id
+    assert secondcheck.note_id == note.id
 
 
 def test_average_ratings(session, user, other_user, note):

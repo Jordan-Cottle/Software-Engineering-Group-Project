@@ -6,6 +6,7 @@
 <h2>{{ note.date }}</h2>
 
 <h3>View count: {{ note.views }}</h3>
+<h4>Average rating: {{ note.rating }}</h4>
 <p>{{ note.text }}</p>
 
 {% if can_edit %}
@@ -19,6 +20,17 @@
 {% if admin %}
 <a href="/notes/{{ note.id }}/permissions">Set Permissions</a>
 {% endif %}
+
+<form action ="{{ url_for('rate_note', note_id=note.id) }}" method="post">
+    <label>1</label>
+    <input type="radio" name = "rate" value = "1" {% if rating.value == 1 %} checked = "checked" {% endif %}>
+    <input type="radio" name = "rate" value = "2" {% if rating.value == 2 %} checked = "checked" {% endif %}>
+    <input type="radio" name = "rate" value = "3" {% if rating.value == 3 %} checked = "checked" {% endif %}>
+    <input type="radio" name = "rate" value = "4" {% if rating.value == 4 %} checked = "checked" {% endif %}>
+    <input type="radio" name = "rate" value = "5" {% if rating.value == 5 %} checked = "checked" {% endif %}>
+    <label>5</label>
+    <input type="submit" value = "Rate Note">
+</form>
 
 <h4>Comments</h4>
 
