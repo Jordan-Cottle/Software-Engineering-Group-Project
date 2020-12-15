@@ -169,8 +169,8 @@ def note_edit(note_id):
 
 @app.route("/notes/<int:note_id>/rate", methods=["POST"])
 @login_required
-""" Controller for adding and editing ratings """
 def rate_note(note_id):
+    """ Controller for adding and editing ratings """
     note = get_note(g.session, note_id, current_user)
     rating = request.form["rate"]
     if get_rating(g.session, current_user, note) is None:
