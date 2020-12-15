@@ -17,7 +17,7 @@ Feature: User Sign In
         And I submit the form
         Then I should be logged in as "Joe"
         Then I should be redirected to "/"
-        And I should see "Welcome back to the 49er Notes App, Joe!"
+        And I should see "Welcome back to the Note 14, Joe!"
     
     Scenario: Joe fails to sign into his account
         Given an account "Joe" with password "abcdefg" exists
