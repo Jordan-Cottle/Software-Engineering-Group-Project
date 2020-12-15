@@ -1,10 +1,10 @@
 {% extends "core.html" %}
 {% block body %}
 {% if current_user.is_authenticated %}
-<h1>Welcome back to the 49er Notes App, {{ current_user.name }}!</h1>
+<h1 class="welcome">Welcome back to the 49er Notes App, {{ current_user.name }}!</h1>
 {% else %}
 <h1 class="welcome"> Welcome to Note 14!</h1>
 {% endif %}
 
-<h3>The ideal app for organizing and maintaing notes.</h3>
+<h3>The ideal app for organizing and maintaining notes.</h3>
 {% endblock body %}
