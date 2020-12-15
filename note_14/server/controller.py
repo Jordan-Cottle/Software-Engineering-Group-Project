@@ -63,10 +63,7 @@ def view_note(note_id):
     note = get_note(g.session, note_id, current_user)
     note.views += 1
     g.session.commit()
-    has_rated = False
     rating = get_rating(g.session, current_user, note)
-    if rating is not None:
-        has_rated = True
     return render_template(
         "note.html",
         note=get_note(g.session, note_id, current_user),
@@ -82,7 +79,6 @@ def view_note(note_id):
         can_comment=has_permission(
             g.session, PermissionType.COMMENT, current_user, note=note
         ),
-        has_rated=has_rated,
         rating=rating,
     )
 
@@ -173,6 +169,7 @@ def note_edit(note_id):
 
 @app.route("/notes/<int:note_id>/rate", methods=["POST"])
 @login_required
+""" Controller for adding and editing ratings """
 def rate_note(note_id):
     note = get_note(g.session, note_id, current_user)
     rating = request.form["rate"]
