@@ -14,8 +14,10 @@ from database import (
     add_permission,
     get_attachment,
     delete_attachment,
+    create_user,
+    add_comment,
 )
-from models import Note, Attachment
+from models import Note, Attachment, Rating, NotePermission, Comment
 
 
 def test_create_simple_note(session, user):
@@ -138,6 +140,30 @@ def test_edit_note(session, user, note):
     assert editednote.text == edtext, "Editing note should change the text"
     assert sections_before == 2
     assert sections_after == 2
+
+
+def test_cascades_work(session, user, note):
+    """ make sure all things related to a note are deleted when a note is deleted """
+    user2 = create_user(session, "dafdsfas", "dfadsfdsaf")
+    add_permission(session, PermissionType.READ, user2, note, triggered_by=user)
+    add_comment(session, "fdsa", note, user)
+    create_rating(session, user, note, 5)
+    delete_note(session, note.id, user)
+    permissioncheck = (
+        session.query(NotePermission)
+        .filter_by(user_id=user2.id, note_id=note.id)
+        .first()
+    )
+    ratingcheck = (
+        session.query(Rating).filter_by(owner_id=user.id, note_id=note.id).first()
+    )
+    commentcheck = (
+        session.query(Comment).filter_by(owner_id=user.id, note_id=note.id).first()
+    )
+
+    assert permissioncheck is None
+    assert ratingcheck is None
+    assert commentcheck is None
 
 
 def test_add_attachment(session, user, note):
