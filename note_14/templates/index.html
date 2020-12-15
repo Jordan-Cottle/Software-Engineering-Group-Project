@@ -3,8 +3,8 @@
 {% if current_user.is_authenticated %}
 <h1>Welcome back to the 49er Notes App, {{ current_user.name }}!</h1>
 {% else %}
-<h1>Welcome to the 49er Notes App!</h1>
+<h1 style="text-align: center;font-size: 60px"><span style="color:rgb(10, 107, 10);font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;font-size:larger;"> Welcome to Note 14!</span></h1>
 {% endif %}
 
-<h2>Use this site to maintain and organize your notes.</h2>
+<h3 style="text-align: center;font-size: 50px;"><span style="background-color:rgb(255, 217, 0);font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;" >Use this site to maintain and organize your notes. </span></h3>
 {% endblock body %}
