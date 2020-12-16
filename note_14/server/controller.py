@@ -277,11 +277,13 @@ def unauthorized_redirect(error):
 
 
 def allowed_file(filename):
+    """ Checking file extensions """
     return "." in filename and filename.rsplit(".", 1)[1].lower() in ALLOWED_EXTENSIONS
 
 
 @app.route("/notes/<int:note_id>/uploads", methods=["GET", "POST"])
 def upload_file(note_id):
+    """ Controller for Upload an attachment """
     if request.method == "POST":
         note = get_note(g.session, note_id, current_user)
         file = request.files["file"]
@@ -293,12 +295,14 @@ def upload_file(note_id):
             file.save(os.path.join(app.config["UPLOAD_FOLDER"], attachment.file_name))
             flash("File successsfully uploaded")
             return redirect(url_for("view_note", note_id=note_id))
+        return redirect(url_for("view_note", note_id=note_id))
 
 
 @app.route(
     "/notes/<int:note_id>/uploads/<int:attachment_id>/download", methods=["GET", "POST"]
 )
 def download(note_id, attachment_id):
+    """ Controller for download an attachment """
     note = get_note(g.session, note_id, current_user)
     attachment = get_attachment(g.session, attachment_id, note, current_user)
     return send_from_directory(
@@ -308,6 +312,7 @@ def download(note_id, attachment_id):
 
 @app.route("/notes/<int:note_id>/uploads/<int:attachment_id>/delete", methods=["POST"])
 def delete_file(note_id, attachment_id):
+    """ Controller for  delete an attachment """
     note = get_note(g.session, note_id, current_user)
     attachment = get_attachment(g.session, attachment_id, note, current_user)
     os.remove(os.path.join(app.config["UPLOAD_FOLDER"], attachment.file_name))
