@@ -294,7 +294,7 @@ def upload_file(note_id):
 
         if file and allowed_file(file.filename):
             attachment = add_attachment(g.session, file, note, current_user)
-            flash("File successsfully uploaded")
+            flash("{attachment.file_name} successsfully uploaded")
             return redirect(url_for("view_note", note_id=note_id))
 
     return redirect(url_for("view_note", note_id=note_id))
