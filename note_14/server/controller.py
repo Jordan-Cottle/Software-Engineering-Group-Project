@@ -22,7 +22,7 @@ from database import (
     get_attachment,
     delete_attachment,
 )
-from config import PermissionType, ALLOWED_EXTENSIONS, UPLOAD_FOLDER
+from config import PermissionType, ALLOWED_EXTENSIONS
 from flask import g, redirect, render_template, request, flash, send_file
 from flask.helpers import url_for
 from flask_login import current_user, login_required
