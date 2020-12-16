@@ -14,7 +14,7 @@ from datetime import date
 from sqlalchemy.orm.exc import NoResultFound
 from werkzeug.utils import secure_filename
 
-from config import PermissionType
+from config import PermissionType, UPLOAD_FOLDER
 from models import Attachment, Note, NotePermission, NoteSection
 from database import UnauthorizedError, add_permission, check_permission
 
@@ -103,10 +103,12 @@ def add_attachment(session, attachment, note, user):
 
     # determine filename
     num = 1
-    file_name = secure_filename(f"{user.name}_{name}_{num}.{ext}")
+    file_name = secure_filename(f"{user.name}_{name}_{num}{ext}")
     while os.path.isfile(file_name):
         num += 1
-        file_name = secure_filename(f"{user.name}_{name}_{num}.{ext}")
+        file_name = secure_filename(f"{user.name}_{name}_{num}{ext}")
+
+    file_name = os.path.join(UPLOAD_FOLDER, file_name)
 
     # create model to track attachment
     attachment_model = Attachment(
@@ -119,6 +121,9 @@ def add_attachment(session, attachment, note, user):
 
     # Flush to db to make sure everything is good
     session.flush()
+
+    # Save file
+    attachment.save(file_name)
 
     return attachment_model
 

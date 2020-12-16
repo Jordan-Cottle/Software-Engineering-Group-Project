@@ -1,7 +1,7 @@
 import os
 from unittest.mock import MagicMock
+from config import PermissionType, UPLOAD_FOLDER
 
-from config import PermissionType
 from database import (
     get_note,
     get_notes,
@@ -171,21 +171,21 @@ def test_add_attachment(session, user, note):
 
     display_name = "test_file.txt"
     name, ext = os.path.splitext(display_name)
-    file_name = f"{user.name}_{name}_1.{ext}"
-
+    file_name = f"{user.name}_{name}_1{ext}"
+    location = os.path.join(UPLOAD_FOLDER, file_name)
     attachment = MagicMock(filename=display_name)
 
     model = add_attachment(session, attachment, note, user)
     session.commit()
 
     attachment.save.assert_called_once()
-    attachment.save.assert_called_with(file_name)
+    attachment.save.assert_called_with(location)
 
     assert (
         model.display_name == display_name
     ), f"Attachment should have the name the user provided: got {model.display_name}, expected {display_name}"
     assert (
-        model.file_name == file_name
+        model.file_name == location
     ), f"Attachments should be given a predictable, unique filename: got {model.file_name}, expected {file_name}"
 
     attachment = session.query(Attachment).one()
@@ -202,6 +202,8 @@ def test_delete_attachment(session, user, note, attachment):
     before_delete = session.query(Attachment).count()
     delete_attachment(session, attachment.id, user, note)
     after_delete = session.query(Attachment).count()
+
+    attachment = MagicMock(filename=attachment.display_name)
 
     assert (
         before_delete > after_delete

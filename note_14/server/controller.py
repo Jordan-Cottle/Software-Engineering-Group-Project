@@ -283,16 +283,17 @@ def allowed_file(filename):
 
 @app.route("/notes/<int:note_id>/uploads", methods=["GET", "POST"])
 def upload_file(note_id):
-    """ Controller for Upload an attachment """
+    """ Controller for upload an attachment """
     if request.method == "POST":
         note = get_note(g.session, note_id, current_user)
         file = request.files["file"]
+
         if file.filename == "":
             flash("No selected file")
             return redirect(url_for("view_note", note_id=note_id))
+
         if file and allowed_file(file.filename):
             attachment = add_attachment(g.session, file, note, current_user)
-            file.save(os.path.join(app.config["UPLOAD_FOLDER"], attachment.file_name))
             flash("File successsfully uploaded")
             return redirect(url_for("view_note", note_id=note_id))
 
@@ -316,6 +317,6 @@ def delete_file(note_id, attachment_id):
     """ Controller for  delete an attachment """
     note = get_note(g.session, note_id, current_user)
     attachment = get_attachment(g.session, attachment_id, note, current_user)
-    os.remove(os.path.join(app.config["UPLOAD_FOLDER"], attachment.file_name))
+    os.remove(attachment.file_name)
     delete_attachment(g.session, attachment_id, note, current_user)
     return redirect(url_for("view_note", note_id=note_id))
