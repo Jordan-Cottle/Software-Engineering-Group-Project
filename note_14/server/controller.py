@@ -297,7 +297,9 @@ def upload_file(note_id):
             flash("File successsfully uploaded")
             return redirect(url_for("view_note", note_id=note_id))
         else:
-            return "ERROR: File extension not allowed"
+            flash("ERROR: File extension not allowed")
+        
+    return redirect(url_for("view_note", note_id=note_id))
 
 
 @app.route(
