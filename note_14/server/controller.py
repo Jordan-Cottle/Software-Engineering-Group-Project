@@ -295,7 +295,7 @@ def upload_file(note_id):
             file.save(os.path.join(app.config["UPLOAD_FOLDER"], attachment.file_name))
             flash("File successsfully uploaded")
             return redirect(url_for("view_note", note_id=note_id))
-    
+
     return redirect(url_for("view_note", note_id=note_id))
 
 
