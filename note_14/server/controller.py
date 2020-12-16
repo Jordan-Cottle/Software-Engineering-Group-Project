@@ -296,6 +296,8 @@ def upload_file(note_id):
             add_attachment(g.session, file, note, current_user)
             flash("File successsfully uploaded")
             return redirect(url_for("view_note", note_id=note_id))
+        else:
+            return "Extension not allowed"
 
     return redirect(url_for("view_note", note_id=note_id))
 
