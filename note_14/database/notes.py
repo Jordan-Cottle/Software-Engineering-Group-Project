@@ -120,9 +120,6 @@ def add_attachment(session, attachment, note, user):
     # Flush to db to make sure everything is good
     session.flush()
 
-    # finally save file to disk
-    attachment.save(file_name)
-
     return attachment_model
 
 
