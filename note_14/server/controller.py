@@ -298,7 +298,7 @@ def upload_file(note_id):
             return redirect(url_for("view_note", note_id=note_id))
         else:
             flash("ERROR: File extension not allowed")
-        
+
     return redirect(url_for("view_note", note_id=note_id))
 
 
