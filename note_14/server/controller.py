@@ -22,8 +22,8 @@ from database import (
     get_attachment,
     delete_attachment,
 )
-from config import PermissionType, ALLOWED_EXTENSIONS
-from flask import g, redirect, render_template, request, flash, send_from_directory
+from config import PermissionType, ALLOWED_EXTENSIONS, UPLOAD_FOLDER
+from flask import g, redirect, render_template, request, flash, send_file
 from flask.helpers import url_for
 from flask_login import current_user, login_required
 
@@ -293,8 +293,8 @@ def upload_file(note_id):
             return redirect(url_for("view_note", note_id=note_id))
 
         if file and allowed_file(file.filename):
-            attachment = add_attachment(g.session, file, note, current_user)
-            flash("{attachment.file_name} successsfully uploaded")
+            add_attachment(g.session, file, note, current_user)
+            flash("File successsfully uploaded")
             return redirect(url_for("view_note", note_id=note_id))
 
     return redirect(url_for("view_note", note_id=note_id))
@@ -307,9 +307,7 @@ def download(note_id, attachment_id):
     """ Controller for download an attachment """
     note = get_note(g.session, note_id, current_user)
     attachment = get_attachment(g.session, attachment_id, note, current_user)
-    return send_from_directory(
-        directory=app.config["UPLOAD_FOLDER"], filename=attachment.file_name
-    )
+    return send_file(attachment.file_name)
 
 
 @app.route("/notes/<int:note_id>/uploads/<int:attachment_id>/delete", methods=["POST"])
