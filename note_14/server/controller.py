@@ -2,7 +2,7 @@
 
 Flask routes should be defined here.
 """
-
+import os
 from database import (
     create_user,
     get_note,
@@ -18,9 +18,12 @@ from database import (
     delete_comment,
     create_rating,
     get_rating,
+    add_attachment,
+    get_attachment,
+    delete_attachment,
 )
-from config import PermissionType
-from flask import g, redirect, render_template, request
+from config import PermissionType, ALLOWED_EXTENSIONS
+from flask import g, redirect, render_template, request, flash, send_file
 from flask.helpers import url_for
 from flask_login import current_user, login_required
 
@@ -271,3 +274,48 @@ def unauthorized_redirect(error):
     """ Send user to the unauthorized page. """
     print(f"UNAUTHORIZED: {error}")
     return redirect(url_for("unauthorized"))
+
+
+def allowed_file(filename):
+    """ Checking file extensions """
+    return "." in filename and filename.rsplit(".", 1)[1].lower() in ALLOWED_EXTENSIONS
+
+
+@app.route("/notes/<int:note_id>/uploads", methods=["GET", "POST"])
+def upload_file(note_id):
+    """ Controller for upload an attachment """
+    if request.method == "POST":
+        note = get_note(g.session, note_id, current_user)
+        file = request.files["file"]
+
+        if file.filename == "":
+            flash("No selected file")
+            return redirect(url_for("view_note", note_id=note_id))
+
+        if file and allowed_file(file.filename):
+            add_attachment(g.session, file, note, current_user)
+            flash("File successsfully uploaded")
+        else:
+            flash("ERROR: File extension not allowed")
+
+    return redirect(url_for("view_note", note_id=note_id))
+
+
+@app.route(
+    "/notes/<int:note_id>/uploads/<int:attachment_id>/download", methods=["GET", "POST"]
+)
+def download(note_id, attachment_id):
+    """ Controller for download an attachment """
+    note = get_note(g.session, note_id, current_user)
+    attachment = get_attachment(g.session, attachment_id, note, current_user)
+    return send_file(attachment.file_name)
+
+
+@app.route("/notes/<int:note_id>/uploads/<int:attachment_id>/delete", methods=["POST"])
+def delete_file(note_id, attachment_id):
+    """ Controller for  delete an attachment """
+    note = get_note(g.session, note_id, current_user)
+    attachment = get_attachment(g.session, attachment_id, note, current_user)
+    os.remove(attachment.file_name)
+    delete_attachment(g.session, attachment_id, note, current_user)
+    return redirect(url_for("view_note", note_id=note_id))

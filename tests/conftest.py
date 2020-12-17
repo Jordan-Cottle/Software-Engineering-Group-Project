@@ -1,6 +1,7 @@
 import pytest
-
 import config
+
+from config import UPLOAD_FOLDER
 
 config.DB_FILENAME = f":memory:"
 
@@ -94,14 +95,9 @@ def test_notes(session, user):
 def test_attachment(session, user, note):
     display_name = "test_file.txt"
     name, ext = os.path.splitext(display_name)
-    file_name = f"{user.name}_{name}_1.{ext}"
+    file_name = f"{user.name}_{name}_1{ext}"
 
     attachment = MagicMock(filename=display_name)
     model = add_attachment(session, attachment, note, user)
     session.commit()
-
-    attachment.save.assert_called_once()
-    attachment.save.assert_called_with(file_name)
-    session.commit()
-
     return model
