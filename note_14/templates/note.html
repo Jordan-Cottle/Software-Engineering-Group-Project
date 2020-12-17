@@ -1,27 +1,30 @@
 {% extends "core.html" %}
 {% block body %}
 <h1>Note Data</h1>
-<h2>{{ note.title }}</h2>
+<span class="note_header"> <h2>{{ note.title }}</h2></span>
 
-<h2>{{ note.date }}</h2>
+<span class="note_header"> <h2>{{ note.date }}</h2></span>
 
+<div class="move_everything">
 <h3>View count: {{ note.views }}</h3>
-<h4>Average rating: {{ note.rating }}</h4>
-<p>{{ note.text }}</p>
-
+<h4 class="word_h4">Average rating: {{ note.rating }}</h4>
+<p class="view_notes">{{ note.text }}</p>
+<br>
+<div class="move_everything">
 {% if can_edit %}
-<a href="{{ url_for('note_edit', note_id=note.id) }}">Edit</a>
-
+<a class="word_h4" href="{{ url_for('note_edit', note_id=note.id) }}">Edit</a>
+<br>
 <form action="{{ url_for('note_delete', note_id=note.id) }}" method="post">
-    <input type="submit" value="Delete">
+    <input class="data_btn" type="submit" value="Delete">
 </form>
 {% endif %}
-
+<br>
 {% if admin %}
-<a href="/notes/{{ note.id }}/permissions">Set Permissions</a>
+<a href="/notes/{{ note.id }}/permissions" class="word_h4">Set Permissions</a>
+<br>
 {% endif %}
-
-<form action ="{{ url_for('rate_note', note_id=note.id) }}" method="post">
+<br>
+<form action="{{ url_for('rate_note', note_id=note.id) }}" method="post">
     <label>1</label>
     <input type="radio" name = "rate" value = "1" {% if rating.value == 1 %} checked = "checked" {% endif %}>
     <input type="radio" name = "rate" value = "2" {% if rating.value == 2 %} checked = "checked" {% endif %}>
@@ -29,10 +32,12 @@
     <input type="radio" name = "rate" value = "4" {% if rating.value == 4 %} checked = "checked" {% endif %}>
     <input type="radio" name = "rate" value = "5" {% if rating.value == 5 %} checked = "checked" {% endif %}>
     <label>5</label>
-    <input type="submit" value = "Rate Note">
+    <br>
+    <br>
+    <input class="data_btn" type="submit" value = "Rate Note">
 </form>
-
-<h4>Comments</h4>
+<br>
+<h4 class="word_h4">Comments</h4>
 
 {% for comment in note.comments %}
 
@@ -43,7 +48,7 @@
 
     <form class="delete_comment" action="{{ url_for('remove_comment', comment_id = comment.id, note_id=note.id) }}"
         method="post">
-        <input type="submit" class="delete_comment" value="X">
+        <input class="data_btn" type="submit" class="delete_comment" value="X">
     </form>
 </section>
 {% endif %}
@@ -51,8 +56,9 @@
 
 {% if can_comment %}
 <form action="{{ url_for('create_comment', note_id=note.id) }}" method="post">
-    <input type="text" name="body"> <input type="submit" value="Add Comment">
+    <input class="data_input" type="text" name="body"> <br> <input class="data_btn" type="submit" value="Add Comment">
 </form>
 {% endif %}
 
 {% endblock body %}
+</div>

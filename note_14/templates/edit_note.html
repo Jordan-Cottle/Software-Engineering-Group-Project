@@ -2,14 +2,14 @@
 
 {% block body %}
 
-<form action="{{ url_for('note_edit', note_id=note.id) }}" method="post">
-    <p><label>Title </label></p>
-    <p><input type="text" name="title" value="{{ note.title }}" /></p>
+<form class="edit_note" action="{{ url_for('note_edit', note_id=note.id) }}" method="post">
+    <p><label class="edit_label">Title </label></p>
+    <p><input class="edit_input" type="text" name="title" value="{{ note.title }}" /></p>
 
-    <p><label>Text </label></p>
-    <p><textarea rows="12" cols="80" name="note_text">{{ note.text }}</textarea></p>
+    <p><label class="edit_label">Text </label></p>
+    <p><textarea class="edit_input" rows="12" cols="80" name="note_text">{{ note.text }}</textarea></p>
 
-    <p><input type="submit" value="Edit" /></p>
+    <p><input class="edit_input" type="submit" value="Edit" /></p>
 </form>
 
 {% endblock body %}

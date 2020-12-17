@@ -2,12 +2,12 @@
 
 {% block body %}
 
-<form action="{{ url_for('create_account') }}" method="post">
-    <p><label>Username </label></p>
-    <p><input type="text" name="user_name" placeholder="username" /></p>
-    <p><label>Password</label></p>
-    <p><input type="password" name="password" placeholder="password" /></p>
-    <p><input type="submit" value="Register" /></p>
+<form class="register_form" action="{{ url_for('create_account') }}" method="post">
+    <p><label class="register_label">Username </label></p>
+    <p><input class="register_input" type="text" name="user_name" placeholder="username" /></p>
+    <p><label class="register_label">Password</label></p>
+    <p><input class="register_input" type="password" name="password" placeholder="password" /></p>
+    <p><input class="register_input" type="submit" value="Register" /></p>
 </form>
 
 {% endblock body %}
