@@ -7,7 +7,7 @@
         <thead>
             <th class="user">User</th>
             {% for permission_type in permission_types %}
-            <th>{{ permission_type.value.lower().capitalize() }}</th>
+            <th class="user">{{ permission_type.value.lower().capitalize() }}</th>
             {% endfor %}
         </thead>
         <tbody>
@@ -17,15 +17,17 @@
                 <td><input class="hidden" type="text" name="user_{{i}}" value="{{user.id}}">{{user.name}}</td>
                 {% for permission_type in permission_types %}
                 {% set permission_set = user_permissions.get(permission_type, "false") %}
-                <td><input type="checkbox" name="{{permission_type.value}}_{{i}}" {% if permission_set=="true" %}
-                        checked="true" {% endif %}></td>
+                <td><label class="container"><input type="checkbox" name="{{permission_type.value}}_{{i}}" {% if permission_set=="true" %}
+                    checked="true" {% endif %}>
+                    <span class = "checkmark"></span></label></td>
                 {% endfor %}
             </tr>
             {% endfor %}
             <tr>
                 <td><input class="permission_btn" type="text" name="new_user" placeholder="new user"></td>
                 {% for permission_type in permission_types %}
-                <td><input type="checkbox" name="new_{{permission_type.value}}"></td>
+                <td><label class="container"><input type="checkbox" name="new_{{permission_type.value}}">
+                    <span class = "checkmark"></span></label></td>
                 {% endfor %}
             </tr>
         </tbody>
