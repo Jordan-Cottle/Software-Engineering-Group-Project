@@ -117,9 +117,7 @@ ul {
   }
 
   .table_border{
-    border: 8px solid rgb(10, 107, 10);
-    border-radius: 4px;
-    border-style: outset;
+   
     padding-left: 50px;
     padding-top: 10px;
     padding-right: 100px;
