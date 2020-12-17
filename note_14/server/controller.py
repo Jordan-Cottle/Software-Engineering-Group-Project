@@ -303,14 +303,18 @@ def upload_file(note_id):
 
 
 @app.route(
-    "/notes/<int:note_id>/uploads/<int:attachment_id>/<string:display_name>",
+    "/notes/<int:note_id>/<int:attachment_id>download",
     methods=["GET", "POST"],
 )
-def download(note_id, attachment_id, display_name):
+def download(note_id, attachment_id):
     """ Controller for download an attachment """
     note = get_note(g.session, note_id, current_user)
     attachment = get_attachment(g.session, attachment_id, note, current_user)
-    return send_file(attachment.file_name)
+    return send_file(
+        attachment.file_name,
+        attachment_filename=attachment.display_name,
+        as_attachment=True,
+    )
 
 
 @app.route("/notes/<int:note_id>/uploads/<int:attachment_id>/delete", methods=["POST"])
