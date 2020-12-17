@@ -104,11 +104,11 @@ def add_attachment(session, attachment, note, user):
     # determine filename
     num = 1
     file_name = secure_filename(f"{user.name}_{name}_{num}{ext}")
+    file_name = os.path.join(UPLOAD_FOLDER, file_name)
     while os.path.isfile(file_name):
         num += 1
         file_name = secure_filename(f"{user.name}_{name}_{num}{ext}")
-
-    file_name = os.path.join(UPLOAD_FOLDER, file_name)
+        file_name = os.path.join(UPLOAD_FOLDER, file_name)
 
     # create model to track attachment
     attachment_model = Attachment(
