@@ -130,7 +130,7 @@ def click_on_item(test_session, item):
     link = f"{item}</a>" in html
 
     if link:
-        match = re.search(f'<a.*href="([^"]+)".*>{item}</a>', html)  
+        match = re.search(f'<a href="([^"]+)">{item}</a>', html)  
         assert match, f"Link labeled {item} not found in {html}"
         test_session.get(match.group(1))
         return
