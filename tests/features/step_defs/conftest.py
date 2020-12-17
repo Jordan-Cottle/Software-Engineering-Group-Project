@@ -148,7 +148,7 @@ def enter_form_data(test_session):
     """ Detect form action and post data to it. """
 
     html = test_session.response.get_data(as_text=True)
-    match = re.search(r'<form action="(/[^"]+)"<class="(/[^"]+)"', html)
+    match = re.search(r'<form action="(/[^"]+)".*.', html)
     assert match, "Form must be located on the html page in order to submit it!"
 
     action = match.group(1)
