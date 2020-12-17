@@ -203,8 +203,6 @@ def test_delete_attachment(session, user, note, attachment):
     delete_attachment(session, attachment.id, user, note)
     after_delete = session.query(Attachment).count()
 
-    attachment = MagicMock(filename=attachment.display_name)
-
     assert (
         before_delete > after_delete
     ), "Delete should reduce the number of attachments in the database."
