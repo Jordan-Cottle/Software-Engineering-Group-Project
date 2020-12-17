@@ -7,7 +7,25 @@
 
 <h3>View count: {{ note.views }}</h3>
 <h4>Average rating: {{ note.rating }}</h4>
+
 <p>{{ note.text }}</p>
+
+{% for attachment in note.attachments %}
+
+<section>
+    {{ attachment.display_name }} 
+    <div class="container" align="left">
+        <a href="{{ url_for('download', note_id=note.id, attachment_id=attachment.id) }}" target="blank"><button class='btn btn-default'>Download</button></a>
+    </div>
+    {% if can_edit %}
+    <form class="delete_file" action="{{ url_for('delete_file', note_id=note.id, attachment_id=attachment.id) }}"
+        method="post">
+        <input type="submit" class="delete_file" value="X">
+    </form>
+    {% endif %}
+</section>
+
+{% endfor %}
 
 {% if can_edit %}
 <a href="{{ url_for('note_edit', note_id=note.id) }}">Edit</a>
@@ -32,6 +50,12 @@
     <input type="submit" value = "Rate Note">
 </form>
 
+{% if can_edit %}
+<form action ="{{ url_for('upload_file', note_id=note.id) }}" method = "POST" enctype=multipart/form-data>
+      <input type= "file"  name= "file" >
+      <input type="Submit" >
+    </form>
+{% endif %}
 <h4>Comments</h4>
 
 {% for comment in note.comments %}
@@ -41,7 +65,7 @@
 
     {% if admin or current_user.id == comment.owner.id %}
 
-    <form class="delete_comment" action="{{ url_for('remove_comment', comment_id = comment.id, note_id=note.id) }}"
+    <form class="delete_comment" action="{{ url_for('remove_comment', comment_id=comment.id, note_id=note.id) }}"
         method="post">
         <input type="submit" class="delete_comment" value="X">
     </form>
