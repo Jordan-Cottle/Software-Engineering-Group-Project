@@ -14,9 +14,10 @@
 
 <section>
     {{ attachment.display_name }} 
-    <div class="container" align="left">
-        <a href="{{ url_for('download', note_id=note.id, attachment_id=attachment.id) }}" target="blank"><button class='btn btn-default'>Download</button></a>
-    </div>
+
+    <form action="{{ url_for('download', note_id=note.id, attachment_id=attachment.id, display_name=attachment.display_name) }}" method="post">
+        <input type="submit" value="Download">
+    </form>
     {% if can_edit %}
     <form class="delete_file" action="{{ url_for('delete_file', note_id=note.id, attachment_id=attachment.id) }}"
         method="post">
