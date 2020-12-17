@@ -6,5 +6,18 @@ from .permissions import PermissionType
 DB_FILENAME = "note_14.db"
 ECHO = False
 
-UPLOAD_FOLDER = "/uploads"
-ALLOWED_EXTENSIONS = {"txt", "pdf", "png", "jpg", "jpeg", "gif"}
+UPLOAD_FOLDER = "uploads"
+ALLOWED_EXTENSIONS = {
+    "txt",
+    "pdf",
+    "png",
+    "jpg",
+    "jpeg",
+    "gif",
+    "docx",
+    "doc",
+    "xls",
+    "xlsx",
+    "ppt",
+    "pptx",
+}
