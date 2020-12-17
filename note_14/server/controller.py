@@ -302,13 +302,18 @@ def upload_file(note_id):
 
 
 @app.route(
-    "/notes/<int:note_id>/uploads/<int:attachment_id>/download", methods=["GET", "POST"]
+    "/notes/<int:note_id>/<int:attachment_id>download",
+    methods=["GET", "POST"],
 )
 def download(note_id, attachment_id):
     """ Controller for download an attachment """
     note = get_note(g.session, note_id, current_user)
     attachment = get_attachment(g.session, attachment_id, note, current_user)
-    return send_file(attachment.file_name)
+    return send_file(
+        attachment.file_name,
+        attachment_filename=attachment.display_name,
+        as_attachment=True,
+    )
 
 
 @app.route("/notes/<int:note_id>/uploads/<int:attachment_id>/delete", methods=["POST"])
@@ -319,3 +324,10 @@ def delete_file(note_id, attachment_id):
     os.remove(attachment.file_name)
     delete_attachment(g.session, attachment_id, note, current_user)
     return redirect(url_for("view_note", note_id=note_id))
+
+
+@app.after_request
+def flash_reset(response):
+    """ Resets flash messages to zero """
+    g.pop("_flashes", None)
+    return response
