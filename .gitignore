@@ -133,3 +133,4 @@ dmypy.json
 
 # Don't public secrets
 secrets.py
+uploads/
