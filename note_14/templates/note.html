@@ -1,21 +1,16 @@
 {% extends "core.html" %}
 {% block body %}
-<h1>Note Data</h1>
+<h1 class="note_data_head">Note Data</h1>
 <span class="note_header"> <h2>{{ note.title }}</h2></span>
 
 <span class="note_header"> <h2>{{ note.date }}</h2></span>
 
 <div class="move_everything">
-<h3>View count: {{ note.views }}</h3>
+<h3 class="count_rating">View count: {{ note.views }}</h3>
 
-<h4 class="word_h4">Average rating: {{ note.rating }}</h4>
-<p class="view_notes">{{ note.text }}</p>
-<br>
-<div class="move_everything">
 
-<h4>Average rating: {{ note.rating }}</h4>
 
-<p>{{ note.text }}</p>
+
 
 {% for attachment in note.attachments %}
 
@@ -32,38 +27,11 @@
     {% endif %}
 </section>
 
-{% endfor %}
-
-  
-{% if can_edit %}
-<a class="word_h4" href="{{ url_for('note_edit', note_id=note.id) }}">Edit</a>
-<br>
-<form action="{{ url_for('note_delete', note_id=note.id) }}" method="post">
-    <input class="data_btn" type="submit" value="Delete">
-</form>
-{% endif %}
-<br>
-{% if admin %}
-<a href="/notes/{{ note.id }}/permissions" class="word_h4">Set Permissions</a>
-<br>
-{% endif %}
-<br>
-<form action="{{ url_for('rate_note', note_id=note.id) }}" method="post">
-    <label>1</label>
-    <input type="radio" name = "rate" value = "1" {% if rating.value == 1 %} checked = "checked" {% endif %}>
-    <input type="radio" name = "rate" value = "2" {% if rating.value == 2 %} checked = "checked" {% endif %}>
-    <input type="radio" name = "rate" value = "3" {% if rating.value == 3 %} checked = "checked" {% endif %}>
-    <input type="radio" name = "rate" value = "4" {% if rating.value == 4 %} checked = "checked" {% endif %}>
-    <input type="radio" name = "rate" value = "5" {% if rating.value == 5 %} checked = "checked" {% endif %}>
-    <label>5</label>
-    <br>
-    <br>
-    <input class="data_btn" type="submit" value = "Rate Note">
-</form>
+{% endfor %} 
 
 <br>
-<h4 class="word_h4">Comments</h4>
-
+<h3 class="count_rating">Average rating: {{ note.rating }}</h4>
+<p class="view_notes">{{ note.text }}</p>
 
 {% if can_edit %}
 <form action ="{{ url_for('upload_file', note_id=note.id) }}" method = "POST" enctype=multipart/form-data>
@@ -71,12 +39,38 @@
       <input type="Submit" >
     </form>
 {% endif %}
-<h4>Comments</h4>
+<br>
+<div class="move_everything">
+{% if admin %}
+<a href="/notes/{{ note.id }}/permissions" class="perm_link">Set Permissions</a>
+{% endif %}    
+<br>
+<br>
+{% if can_edit %}
+<a class="edit_link" href="{{ url_for('note_edit', note_id=note.id) }}">Edit</a>
+<br>
+<br>
 
+<form action="{{ url_for('note_delete', note_id=note.id) }}" method="post">
+    <input class="data_btn" type="submit" value="Delete">
+</form>
+{% endif %}
+<br>
+<form class="rating" action="{{ url_for('rate_note', note_id=note.id) }}" method="post">
+    <label>1</label>
+    <input class="rating_btn" type="radio" name = "rate" value = "1" {% if rating.value == 1 %} checked = "checked" {% endif %}>
+    <input class="rating_btn" type="radio" name = "rate" value = "2" {% if rating.value == 2 %} checked = "checked" {% endif %}>
+    <input class="rating_btn" type="radio" name = "rate" value = "3" {% if rating.value == 3 %} checked = "checked" {% endif %}>
+    <input class="rating_btn" type="radio" name = "rate" value = "4" {% if rating.value == 4 %} checked = "checked" {% endif %}>
+    <input class="rating_btn" type="radio" name = "rate" value = "5" {% if rating.value == 5 %} checked = "checked" {% endif %}>
+    <label>5</label>
+    <br>
+    <input class="data_btn" type="submit" value = "Rate Note">
+</form>
 
+<h4 class="comment_header">Comments</h4>
 {% for comment in note.comments %}
-
-<section>
+<section class="comment_detail"> 
     {{ comment.owner.name }} : {{ comment.body }} {{ comment.date }}
 
     {% if admin or current_user.id == comment.owner.id %}
