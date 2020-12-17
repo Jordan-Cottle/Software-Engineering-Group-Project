@@ -73,6 +73,10 @@
 {% endif %}
 {% endfor %}
 
+{% for message in get_flashed_messages() %}
+        <p>{{ message }}</p>
+{% endfor %}
+
 {% if can_comment %}
 <form action="{{ url_for('create_comment', note_id=note.id) }}" method="post">
     <input type="text" name="body"> <input type="submit" value="Add Comment">
