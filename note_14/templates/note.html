@@ -57,6 +57,11 @@
       <input type="Submit" >
     </form>
 {% endif %}
+
+{% for message in get_flashed_messages() %}
+        <p>{{ message }}</p>
+{% endfor %}
+
 <h4>Comments</h4>
 
 {% for comment in note.comments %}
@@ -74,9 +79,7 @@
 {% endif %}
 {% endfor %}
 
-{% for message in get_flashed_messages() %}
-        <p>{{ message }}</p>
-{% endfor %}
+
 
 {% if can_comment %}
 <form action="{{ url_for('create_comment', note_id=note.id) }}" method="post">

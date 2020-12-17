@@ -284,7 +284,6 @@ def allowed_file(filename):
 @app.route("/notes/<int:note_id>/uploads", methods=["GET", "POST"])
 def upload_file(note_id):
     """ Controller for upload an attachment """
-    g.pop("_flashes", None)
     if request.method == "POST":
         note = get_note(g.session, note_id, current_user)
         file = request.files["file"]
@@ -325,3 +324,10 @@ def delete_file(note_id, attachment_id):
     os.remove(attachment.file_name)
     delete_attachment(g.session, attachment_id, note, current_user)
     return redirect(url_for("view_note", note_id=note_id))
+
+
+@app.after_request
+def flash_reset(response):
+    """ Resets flash messages to zero """
+    g.pop("_flashes", None)
+    return response
