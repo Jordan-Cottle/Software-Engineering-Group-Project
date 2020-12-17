@@ -56,6 +56,9 @@
       <input type="Submit" >
     </form>
 {% endif %}
+{% for message in get_flashed_messages() %}
+        <p>{{ message }}</p>
+{% endfor %}
 <h4>Comments</h4>
 
 {% for comment in note.comments %}
