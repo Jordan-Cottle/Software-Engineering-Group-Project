@@ -99,7 +99,7 @@ def submit_permissions(test_session):
                 print(f"Removing {key} from permission form")
                 test_session.form.pop(key)
 
-    match = re.search(r'<form action="(/[^"]+)"', html)
+    match = re.search(r'<form.*action="(/[^"]+)"', html)
     assert match, "Form must be located on the html page in order to submit it!"
 
     action = match.group(1)

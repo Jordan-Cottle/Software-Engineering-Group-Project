@@ -2,10 +2,10 @@
 
 {% block body %}
 
-<form action="{{ url_for('set_permissions', note_id = note.id) }}" method="post">
+<form class="center_data"action="{{ url_for('set_permissions', note_id = note.id) }}" method="post">
     <table>
         <thead>
-            <th>User</th>
+            <th class="user">User</th>
             {% for permission_type in permission_types %}
             <th>{{ permission_type.value.lower().capitalize() }}</th>
             {% endfor %}
@@ -23,14 +23,14 @@
             </tr>
             {% endfor %}
             <tr>
-                <td><input type="text" name="new_user" placeholder="new user"></td>
+                <td><input class="permission_btn" type="text" name="new_user" placeholder="new user"></td>
                 {% for permission_type in permission_types %}
                 <td><input type="checkbox" name="new_{{permission_type.value}}"></td>
                 {% endfor %}
             </tr>
         </tbody>
     </table>
-    <input type="Submit" value="Update Permissions">
+    <input class="permission_btn1" type="Submit" value="Update Permissions">
 </form>
 
 {% endblock %}

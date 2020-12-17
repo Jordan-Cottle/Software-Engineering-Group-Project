@@ -1,9 +1,9 @@
 {% extends "core.html" %}
 {% block body %}
-<table>
+<table class="table_border"> 
     <thead>
         <tr>
-            <th colspan="2">Notes</th>
+            <th colspan="2" class="notes_table">Notes</th>
         </tr>
         <tr>
 
@@ -11,31 +11,31 @@
             {% set reverse = not reverse %}
             {% endif %}
 
-            <th><a href="{{ url_for('list_notes', sort_by='title', reverse=reverse) }}">Title</a></th>
+            <th class="notes_table_heading"><a href="{{ url_for('list_notes', sort_by='title', reverse=reverse) }}">Title</a></th>
 
             {% if sort_by == "owner" %}
             {% set reverse = not reverse %}
             {% endif %}
-            <th><a href="{{ url_for('list_notes', sort_by='owner', reverse=reverse) }}">Owner</a></th>
+            <th class="notes_table_heading"><a href="{{ url_for('list_notes', sort_by='owner', reverse=reverse) }}">Owner</a></th>
 
             {% if sort_by == "rating" %}
             {% set reverse = not reverse %}
             {% endif %}
-            <th><a href="{{ url_for('list_notes', sort_by='rating', reverse=reverse) }}">Rating</a></th>
+            <th class="notes_table_heading"><a href="{{ url_for('list_notes', sort_by='rating', reverse=reverse) }}">Rating</a></th>
 
             {% if sort_by == "views" %}
             {% set reverse = not reverse %}
             {% endif %}
-            <th><a href="{{ url_for('list_notes', sort_by='views', reverse=reverse) }}">Views</a></th>
+            <th class="notes_table_heading"><a href="{{ url_for('list_notes', sort_by='views', reverse=reverse) }}">Views</a></th>
         </tr>
     </thead>
     <tbody>
         {% for note in notes %}
         <tr>
-            <td><a href=" /notes/{{ note.id }}">{{ note.title }}</a></td>
-            <td>{{ note.owner.name }}</td>
-            <td>{{ note.rating }}</td>
-            <td>{{ note.views }}</td>
+            <td class="note_content"><a href=" /notes/{{ note.id }}">{{ note.title }}</a></td>
+            <td class="note_content">{{ note.owner.name }}</td>
+            <td class="note_content">{{ note.rating }}</td>
+            <td class="note_content">{{ note.views }}</td>
         </tr>
         {% endfor %}
     </tbody>
